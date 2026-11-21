@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokens centralizados. Valores em RGB para permitir opacidade no Tailwind. */
+:root,
+[data-theme='noite'] {
+  --bg: 11 19 29;          /* azul profundo escurecido */
+  --surface: 17 28 41;     /* #111C29 */
+  --surface-2: 26 42 60;
+  --fg: 255 249 239;       /* branco quente */
+  --muted: 196 184 166;
+  --line: 197 139 66;      /* dourado (usado com baixa opacidade) */
+  --accent: 197 139 66;
+  --radius: 1.125rem;
+  --space-page: 1.25rem;
+  color-scheme: dark;
+}
+
+[data-theme='pergaminho'] {
+  --bg: 242 231 214;       /* #F2E7D6 */
+  --surface: 255 249 239;  /* #FFF9EF */
+  --surface-2: 236 222 200;
+  --fg: 48 40 32;          /* #302820 */
+  --muted: 110 96 80;
+  --line: 168 115 47;
+  --accent: 140 92 34;     /* dourado escurecido p/ contraste AA em fundo claro */
+  color-scheme: light;
+}
+
+html { -webkit-tap-highlight-color: transparent; }
+body {
+  @apply bg-bg text-fg font-sans antialiased;
+  min-height: 100dvh;
+}
+
+/* Superfície de leitura prolongada: sempre clara, em qualquer tema */
+.leitura {
+  @apply bg-marfim text-tinta font-serif;
+  line-height: 1.75;
+}
+
+.card {
+  @apply rounded-card border border-line/25 bg-surface shadow-card;
+}
+
+.btn {
+  @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 font-sans text-[15px] font-medium transition
+         focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
+         disabled:opacity-50 active:scale-[.98];
+}
+.btn-primary { @apply btn bg-ouro text-noite-900 shadow-glow hover:bg-ouro-300; }
+.btn-ghost { @apply btn border border-line/50 text-fg hover:bg-surface-2; }
+
+.eyebrow { @apply font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-accent; }
+
+.field {
+  @apply w-full rounded-xl border border-line/30 bg-surface-2/60 px-4 py-3 text-[16px] text-fg placeholder:text-muted/70
+         focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30;
+}
+
+.pb-nav { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
