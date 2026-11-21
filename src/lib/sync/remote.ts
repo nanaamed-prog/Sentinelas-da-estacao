@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { PORTALS, type PortalId } from '@/lib/content/portals';
-import { emptyDB, preferencesSchema, type DB, type JournalEntry, type PrayerRequest, type PrayerSession, type SeasonRecord, type Preferences } from '@/lib/store/schema';
+import { PROGRAMA_ID } from '@/lib/content/journey';
+import { emptyDB, preferencesSchema, type DB, type JornadaCiclo, type JournalEntry, type PrayerRequest, type PrayerSession, type SeasonRecord, type Preferences } from '@/lib/store/schema';
 
 /** Operações enviadas ao servidor. Cada uma é idempotente (upsert/delete por id). */
 export type Op =
@@ -11,7 +12,8 @@ export type Op =
   | { t: 'pedido'; p: PrayerRequest }
   | { t: 'pedido-del'; id: string }
   | { t: 'diario'; e: JournalEntry }
-  | { t: 'diario-del'; id: string };
+  | { t: 'diario-del'; id: string }
+  | { t: 'jornada'; c: JornadaCiclo };
 
 export const opKey = (op: Op): string => {
   switch (op.t) {
@@ -23,6 +25,7 @@ export const opKey = (op: Op): string => {
     case 'pedido-del': return `pedido:${op.id}`;
     case 'diario': return `diario:${op.e.id}`;
     case 'diario-del': return `diario:${op.id}`;
+    case 'jornada': return `jornada:${op.c.ciclo}`;
   }
 };
 
@@ -48,6 +51,7 @@ export function diff(prev: DB, next: DB): Op[] {
   col('vigilias', (s) => ({ t: 'vigilia', s: s as PrayerSession }), (id) => ({ t: 'vigilia-del', id }));
   col('pedidos', (p) => ({ t: 'pedido', p: p as PrayerRequest }), (id) => ({ t: 'pedido-del', id }));
   col('diario', (e) => ({ t: 'diario', e: e as JournalEntry }), (id) => ({ t: 'diario-del', id }));
+  (next.jornada ?? []).filter((c) => !(prev.jornada ?? []).includes(c)).forEach((c) => ops.push({ t: 'jornada', c }));
   return ops;
 }
 
@@ -112,13 +116,21 @@ export async function applyOp(sb: SupabaseClient, uid: string, op: Op): Promise<
       return;
     }
     case 'diario-del': ok(await sb.from('journal_entries').delete().eq('id', op.id)); return;
+    case 'jornada': {
+      const c = op.c;
+      ok(await sb.from('journey_progress').upsert(c.dias.map((d) => ({
+        user_id: uid, program_id: PROGRAMA_ID, ciclo: c.ciclo, dia: d.dia, registro: d.registro,
+        concluido_em: d.concluidoEm ?? null, created_at: c.iniciadoEm,
+      })), { onConflict: 'user_id,program_id,ciclo,dia' }));
+      return;
+    }
   }
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /** Busca todos os dados da usuária e monta o estado do app. O RLS garante que só voltam os registros dela. */
 export async function pullAll(sb: SupabaseClient, uid: string): Promise<DB> {
-  const [perfil, prefs, portais, estacoes, vigilias, pedidos, atualizacoes, testemunhos, diario] = await Promise.all([
+  const [perfil, prefs, portais, estacoes, vigilias, pedidos, atualizacoes, testemunhos, diario, jornada] = await Promise.all([
     sb.from('profiles').select('nome').eq('id', uid).maybeSingle(),
     sb.from('user_preferences').select('*').eq('user_id', uid).maybeSingle(),
     sb.from('user_portal_settings').select('portal_id, ativo'),
@@ -128,6 +140,7 @@ export async function pullAll(sb: SupabaseClient, uid: string): Promise<DB> {
     sb.from('prayer_request_updates').select('*').order('created_at', { ascending: true }),
     sb.from('testimonies').select('*'),
     sb.from('journal_entries').select('*').order('data', { ascending: false }),
+    sb.from('journey_progress').select('*').eq('program_id', PROGRAMA_ID),
   ]);
   const p: any = ok(prefs as any) ?? {};
   const db = emptyDB();
@@ -162,9 +175,17 @@ export async function pullAll(sb: SupabaseClient, uid: string): Promise<DB> {
     estacao: r.estacao ?? undefined, portal: r.portal_id ?? undefined, marcadores: r.marcadores ?? [], favorito: r.favorito,
     criadoEm: r.created_at, atualizadoEm: r.updated_at,
   }));
+  const ciclos = new Map<number, JornadaCiclo>();
+  for (const r of (ok(jornada as any) as any[]) ?? []) {
+    const c: JornadaCiclo = ciclos.get(r.ciclo) ?? { ciclo: r.ciclo, iniciadoEm: r.created_at, dias: [] };
+    if (r.created_at < c.iniciadoEm) c.iniciadoEm = r.created_at;
+    c.dias.push({ dia: r.dia, registro: r.registro ?? '', concluidoEm: r.concluido_em ?? undefined });
+    ciclos.set(r.ciclo, c);
+  }
+  db.jornada = [...ciclos.values()].map((c) => ({ ...c, dias: c.dias.sort((a, b) => a.dia - b.dia) })).sort((a, b) => a.ciclo - b.ciclo);
   return db;
 }
 
 /** true se não há nada registrado (servidor novo). */
 export const vazio = (db: DB) =>
-  !db.preferencias.onboardingConcluido && !db.estacoes.length && !db.pedidos.length && !db.diario.length && !db.vigilias.length;
+  !db.preferencias.onboardingConcluido && !db.estacoes.length && !db.pedidos.length && !db.diario.length && !db.vigilias.length && !(db.jornada ?? []).length;

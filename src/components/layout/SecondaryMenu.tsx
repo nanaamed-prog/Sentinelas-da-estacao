@@ -4,10 +4,10 @@ import { Route, Library, Sparkles, Calendar, Star, Settings, User, ChevronRight 
 import { Sheet } from '@/components/ui/Sheet';
 
 const ITENS = [
-  { label: 'Minha Jornada', Icon: Route, fase: 'Fase 4' },
+  { label: 'Minha Jornada', Icon: Route, href: '/jornada/' },
   { label: 'Biblioteca', Icon: Library, fase: 'Fase 4' },
   { label: 'Assistente de Oração', Icon: Sparkles, fase: 'Fase 5' },
-  { label: 'Calendário', Icon: Calendar, fase: 'Fase 4' },
+  { label: 'Calendário', Icon: Calendar, href: '/calendario/' },
   { label: 'Testemunhos', Icon: Star, href: '/altar/#respondidos' },
   { label: 'Configurações', Icon: Settings, href: '/configuracoes/' },
   { label: 'Minha Conta', Icon: User, href: '/configuracoes/#conta' },

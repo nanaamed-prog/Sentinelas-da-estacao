@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { Flame, ChevronRight, HandHeart, NotebookPen, Route, Sparkles } from 'lucide-react';
 import { WatchtowerHero } from '@/components/brand/Watchtower';
+import { JourneyProgress } from '@/components/journey/JourneyProgress';
+import { JORNADA } from '@/lib/content/journey';
 import { ScriptureReference } from '@/components/ui/ScriptureReference';
 import { useDB, useNow } from '@/lib/store/provider';
 import { currentPortal, formatHora, getPortal, nextPortal, nomePortal } from '@/lib/content/portals';
@@ -24,6 +26,8 @@ export default function MinhaTorre() {
   const prioritario = abertos.find((p) => p.prioritario) ?? abertos[0];
   const ultimo = [...db.diario].sort((a, b) => b.data.localeCompare(a.data))[0];
   const portalIniciar = emAndamento ? getPortal(emAndamento.portal)! : agora;
+  const jornada = [...db.jornada].sort((a, b) => b.ciclo - a.ciclo)[0];
+  const proximoDia = jornada ? JORNADA.find((d) => !jornada.dias.some((x) => x.dia === d.dia && x.concluidoEm))?.dia : undefined;
 
   return (
     <div className="space-y-4">
@@ -77,7 +81,14 @@ export default function MinhaTorre() {
         vazio="Seu diário ainda está em branco." />
 
       <div className="grid grid-cols-2 gap-3">
-        <EmBreve Icon={Route} titulo="Plano de 7 dias" texto="Disponível na Fase 4" />
+        <Link href="/jornada/" className="card block p-4">
+          <Route size={20} strokeWidth={1.5} className="text-accent" />
+          <p className="mt-2 text-[14px] font-medium">Plano de 7 dias</p>
+          {jornada ? <>
+            <p className="mb-2 text-[12px] text-muted">{proximoDia ? `Dia ${proximoDia}: ${JORNADA[proximoDia - 1].titulo}` : 'Concluído'}</p>
+            <JourneyProgress ciclo={jornada} compacto />
+          </> : <p className="text-[12px] text-muted">Começar a jornada</p>}
+        </Link>
         <EmBreve Icon={Sparkles} titulo="Assistente da Sentinela" texto="Disponível na Fase 5" />
       </div>
     </div>

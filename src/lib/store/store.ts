@@ -3,7 +3,7 @@ import type { PortalId } from '@/lib/content/portals';
 import type { SeasonId } from '@/lib/content/seasons';
 import {
   dbSchema, emptyDB, journalEntrySchema, prayerRequestSchema, preferencesSchema,
-  type DB, type JournalEntry, type Preferences, type PrayerRequest, type PrayerSession,
+  type DB, type JornadaCiclo, type JournalEntry, type Preferences, type PrayerRequest, type PrayerSession,
   type SeasonRecord, type Status,
 } from './schema';
 
@@ -204,6 +204,34 @@ export class Store {
   excluirRegistro(id: string) {
     this.commit({ ...this.db, diario: this.db.diario.filter((d) => d.id !== id) });
   }
+
+  // ---------- Jornada (plano de sete dias) ----------
+  get jornadaAtual(): JornadaCiclo | undefined {
+    return [...this.db.jornada].sort((a, b) => b.ciclo - a.ciclo)[0];
+  }
+
+  /** Começa a jornada (ou um novo ciclo, se reiniciar). Ciclos anteriores são preservados. */
+  iniciarJornada(reiniciar = false): JornadaCiclo {
+    const atual = this.jornadaAtual;
+    if (atual && !reiniciar) return atual;
+    const novo: JornadaCiclo = { ciclo: (atual?.ciclo ?? 0) + 1, iniciadoEm: now(), dias: [{ dia: 1, registro: '' }] };
+    this.commit({ ...this.db, jornada: [...this.db.jornada, novo] });
+    return novo;
+  }
+
+  private alterarDia(dia: number, patch: { registro?: string; concluidoEm?: string | undefined }) {
+    const atual = this.jornadaAtual ?? this.iniciarJornada();
+    const existe = atual.dias.some((d) => d.dia === dia);
+    const dias = existe
+      ? atual.dias.map((d) => (d.dia === dia ? { ...d, ...patch } : d))
+      : [...atual.dias, { dia, registro: '', ...patch }].sort((a, b) => a.dia - b.dia);
+    const novo = { ...atual, dias };
+    this.commit({ ...this.db, jornada: this.db.jornada.map((c) => (c.ciclo === atual.ciclo ? novo : c)) });
+  }
+
+  registrarDia(dia: number, registro: string) { this.alterarDia(dia, { registro }); }
+  concluirDia(dia: number) { this.alterarDia(dia, { concluidoEm: now() }); }
+  reabrirDia(dia: number) { this.alterarDia(dia, { concluidoEm: undefined }); }
 
   // ---------- Dados ----------
   exportar(): string {

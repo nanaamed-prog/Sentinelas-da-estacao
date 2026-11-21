@@ -81,6 +81,19 @@ export const journalEntrySchema = z.object({
   atualizadoEm: iso,
 });
 
+export const jornadaDiaSchema = z.object({
+  dia: z.number().int().min(1).max(60),
+  registro: z.string().max(8000).default(''),
+  concluidoEm: iso.optional(),
+});
+
+/** Cada reinício cria um novo ciclo; os anteriores ficam no histórico. */
+export const jornadaCicloSchema = z.object({
+  ciclo: z.number().int().min(1),
+  iniciadoEm: iso,
+  dias: z.array(jornadaDiaSchema).default([]),
+});
+
 export const dbSchema = z.object({
   versao: z.literal(1),
   preferencias: preferencesSchema,
@@ -88,6 +101,7 @@ export const dbSchema = z.object({
   pedidos: z.array(prayerRequestSchema),
   vigilias: z.array(prayerSessionSchema),
   diario: z.array(journalEntrySchema),
+  jornada: z.array(jornadaCicloSchema).default([]),
 });
 
 export type Preferences = z.infer<typeof preferencesSchema>;
@@ -97,6 +111,8 @@ export type RequestUpdate = z.infer<typeof requestUpdateSchema>;
 export type PrayerSession = z.infer<typeof prayerSessionSchema>;
 export type JournalEntry = z.infer<typeof journalEntrySchema>;
 export type DB = z.infer<typeof dbSchema>;
+export type JornadaCiclo = z.infer<typeof jornadaCicloSchema>;
+export type JornadaDia = z.infer<typeof jornadaDiaSchema>;
 export type Categoria = (typeof CATEGORIAS)[number];
 export type Status = (typeof STATUS)[number];
 export type TipoDiario = (typeof TIPOS_DIARIO)[number];
@@ -108,4 +124,5 @@ export const emptyDB = (): DB => ({
   pedidos: [],
   vigilias: [],
   diario: [],
+  jornada: [],
 });

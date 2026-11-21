@@ -10,7 +10,7 @@ import { emptyDB } from '@/lib/store/schema';
 function fakeSupabase(opts: { falhar?: () => boolean } = {}) {
   const tabelas: Record<string, any[]> = {};
   const chamadas: string[] = [];
-  const pk = (t: string) => (t === 'user_preferences' ? ['user_id'] : t === 'user_portal_settings' ? ['user_id', 'portal_id'] : ['id']);
+  const pk = (t: string) => (t === 'user_preferences' ? ['user_id'] : t === 'user_portal_settings' ? ['user_id', 'portal_id'] : t === 'journey_progress' ? ['user_id', 'program_id', 'ciclo', 'dia'] : ['id']);
   const res = (data: any) => (opts.falhar?.() ? { data: null, error: { message: 'Failed to fetch' } } : { data, error: null });
   const from = (t: string) => {
     const rows = (tabelas[t] ??= []);
@@ -64,6 +64,7 @@ describe('sincronização', () => {
     store.mudarStatus(p.id, 'Respondido', 'Deus abriu uma porta');
     const v = store.iniciarVigilia('alvorada'); store.concluirVigilia(v.id);
     store.salvarRegistro({ titulo: 'Gratidão', tipo: 'Gratidão', texto: 'x' });
+    store.iniciarJornada(); store.registrarDia(1, 'Outono'); store.concluirDia(1); store.registrarDia(2, 'rascunho');
     await eng.flush();
     expect(eng.pendentes).toBe(0);
 
@@ -75,6 +76,8 @@ describe('sincronização', () => {
     expect(remoto.pedidos[0].historico.map((h) => h.tipo)).toEqual(['criado', 'recalibrado', 'status']);
     expect(remoto.vigilias[0].fim).toBeTruthy();
     expect(remoto.diario[0].titulo).toBe('Gratidão');
+    expect(remoto.jornada).toHaveLength(1);
+    expect(remoto.jornada[0].dias.map((d) => [d.dia, d.registro, !!d.concluidoEm])).toEqual([[1, 'Outono', true], [2, 'rascunho', false]]);
     eng.parar();
   });
 
