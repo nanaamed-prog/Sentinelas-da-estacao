@@ -1,0 +1,112 @@
+{
+ "titulo": "Sentinelas da Estação",
+ "subtitulo": "Uma jornada de Palavra, oração e discernimento para caminhar com Deus em cada tempo",
+ "autora": "Naiara de Medeiros",
+ "edicao": "Edição única",
+ "capitulos": [
+  {
+   "slug": "a-jornada-da-sentinela",
+   "numero": null,
+   "titulo": "A Jornada da Sentinela",
+   "epigrafe": "Uma nova jornada",
+   "estacao": null,
+   "partes": 1
+  },
+  {
+   "slug": "o-deus-das-estacoes",
+   "numero": 1,
+   "titulo": "O Deus das Estações",
+   "epigrafe": "O tempo pertence ao Senhor",
+   "estacao": null,
+   "partes": 2
+  },
+  {
+   "slug": "o-chamado-da-sentinela",
+   "numero": 2,
+   "titulo": "O Chamado da Sentinela",
+   "epigrafe": "Vigiar com sobriedade",
+   "estacao": null,
+   "partes": 4
+  },
+  {
+   "slug": "discernindo-sua-estacao",
+   "numero": 3,
+   "titulo": "Discernindo sua Estação",
+   "epigrafe": "Aprender a discernir",
+   "estacao": null,
+   "partes": 5
+  },
+  {
+   "slug": "primavera",
+   "numero": 4,
+   "titulo": "Primavera — Plante",
+   "epigrafe": "A coragem dos começos",
+   "estacao": "primavera",
+   "partes": 6
+  },
+  {
+   "slug": "verao",
+   "numero": 5,
+   "titulo": "Verão — Frutifique",
+   "epigrafe": "Maturidade para frutificar",
+   "estacao": "verao",
+   "partes": 6
+  },
+  {
+   "slug": "outono",
+   "numero": 6,
+   "titulo": "Outono — Deixe Deus Podar",
+   "epigrafe": "A sabedoria de entregar",
+   "estacao": "outono",
+   "partes": 6
+  },
+  {
+   "slug": "inverno",
+   "numero": 7,
+   "titulo": "Inverno — Permaneça",
+   "epigrafe": "Fidelidade na espera",
+   "estacao": "inverno",
+   "partes": 6
+  },
+  {
+   "slug": "as-oito-vigilias",
+   "numero": 8,
+   "titulo": "Os Oito Portais",
+   "epigrafe": "Oito pausas para orar",
+   "estacao": null,
+   "partes": 8
+  },
+  {
+   "slug": "meu-altar",
+   "numero": null,
+   "titulo": "Meu Altar de Intercessão",
+   "epigrafe": "Pedidos que permanecem",
+   "estacao": null,
+   "partes": 4
+  },
+  {
+   "slug": "diario-da-sentinela",
+   "numero": null,
+   "titulo": "Diário da Sentinela",
+   "epigrafe": "Ler, compreender, responder",
+   "estacao": null,
+   "partes": 4
+  },
+  {
+   "slug": "plano-de-sete-dias",
+   "numero": null,
+   "titulo": "Plano de 7 Dias",
+   "epigrafe": "Comece pelo essencial",
+   "estacao": null,
+   "partes": 3
+  },
+  {
+   "slug": "encerramento",
+   "numero": null,
+   "titulo": "Encerramento",
+   "epigrafe": "A comissão da sentinela",
+   "estacao": null,
+   "partes": 3
+  }
+ ]
+}

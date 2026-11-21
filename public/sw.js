@@ -2,11 +2,14 @@
  * Estratégia: cache apenas de arquivos estáticos e páginas (conteúdo NÃO sensível).
  * Dados pessoais ficam no aparelho (Fase 1) ou no Supabase (Fase 2) e nunca entram no cache.
  */
-const VERSAO = 'sentinelas-v2';
-const ESSENCIAIS = ['/', '/manifest.webmanifest', '/icons/icon-192.png'];
+const VERSAO = 'sentinelas-v3';
+// telas guardadas na instalação, para abrir sem internet (só a estrutura; nenhum dado pessoal)
+const ESSENCIAIS = ['/', '/entrar/', '/boas-vindas/', '/vigilias/', '/estacoes/', '/altar/', '/diario/', '/jornada/', '/calendario/',
+  '/biblioteca/', '/testemunhos/', '/lembretes/', '/assistente/', '/configuracoes/', '/privacidade/',
+  '/manifest.webmanifest', '/icons/icon-192.png'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSAO).then((c) => c.addAll(ESSENCIAIS)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSAO).then((c) => Promise.allSettled(ESSENCIAIS.map((u) => c.add(u)))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (e) => {
@@ -18,6 +21,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (req.method !== 'GET' || url.origin !== self.location.origin) return;
   if (url.pathname.startsWith('/api/')) return; // nunca cachear API
+  if (url.searchParams.has('_rsc')) return; // navegação interna: se falhar, o app recarrega a página (servida do cache)
 
   // Arquivos versionados do Next: cache-first
   if (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/icons/')) {
@@ -30,7 +34,7 @@ self.addEventListener('fetch', (e) => {
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then((res) => {
       const copia = res.clone(); caches.open(VERSAO).then((c) => c.put(req, copia)); return res;
-    }).catch(() => caches.match(req).then((hit) => hit || caches.match('/'))));
+    }).catch(() => caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match('/'))));
   }
 });
 

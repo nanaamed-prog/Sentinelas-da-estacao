@@ -1,6 +1,6 @@
 export type PortalId = 'imersao' | 'guerra' | 'alvorada' | 'colheita' | 'santidade' | 'sabedoria' | 'ocaso' | 'silencio';
 
-import { CAPITULOS } from './ebook';
+import conteudo from './portais-conteudo.json';
 
 export interface Portal {
   id: PortalId;
@@ -32,11 +32,11 @@ export const PORTALS: Portal[] = [
   { id: 'silencio', hora: 21, nome: 'Silêncio', artigo: 'do', proposito: 'Entregar' },
 ];
 
-// Conteúdo de cada portal vem do capítulo “Os Oito Portais” do e-book
-const CAP_PORTAIS = CAPITULOS.find((c) => c.slug === 'as-oito-vigilias');
+// Conteúdo de cada portal vem do capítulo “Os Oito Portais” do e-book (arquivo derivado: scripts/derivados.py)
+const CONTEUDO = conteudo as Record<string, { explicacao: string; referencias: string[]; perguntas: string[] }>;
 for (const p of PORTALS) {
-  const sec = CAP_PORTAIS?.secoes.find((x) => x.titulo.includes(`Portal ${p.artigo} ${p.nome}`));
-  if (sec) { p.explicacao = sec.paragrafos.join(' '); p.referencias = sec.leituras; p.perguntas = sec.campos; }
+  const c = CONTEUDO[`Portal ${p.artigo} ${p.nome}`];
+  if (c) { p.explicacao = c.explicacao; p.referencias = c.referencias; p.perguntas = c.perguntas; }
 }
 
 export const getPortal = (id?: string | null) => PORTALS.find((p) => p.id === id);

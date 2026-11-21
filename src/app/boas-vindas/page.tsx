@@ -35,7 +35,7 @@ export default function Onboarding() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col [padding-top:env(safe-area-inset-top)]">
       <div className="flex items-center justify-between px-5 pt-4">
-        <div className="flex gap-1.5" aria-label={`Etapa ${passo + 1} de ${PASSOS.length}: ${PASSOS[passo]}`}>
+        <div className="flex gap-1.5" role="progressbar" aria-valuemin={1} aria-valuemax={PASSOS.length} aria-valuenow={passo + 1} aria-label={`Etapa ${passo + 1} de ${PASSOS.length}: ${PASSOS[passo]}`}>
           {PASSOS.map((_, i) => <span key={i} className={clsx('h-1 rounded-full transition-all', i <= passo ? 'w-6 bg-ouro' : 'w-3 bg-line/30')} />)}
         </div>
         {passo < PASSOS.length - 1 && (

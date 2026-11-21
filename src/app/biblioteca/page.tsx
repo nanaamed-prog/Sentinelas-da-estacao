@@ -4,8 +4,13 @@ import Link from 'next/link';
 import { BookOpen, ChevronRight } from 'lucide-react';
 import { PageHeader } from '@/components/ui/states';
 import { SeasonArt } from '@/components/seasons/SeasonArt';
-import { CAPITULOS, LIVRO, getCapitulo } from '@/lib/content/ebook';
-import { K_ULTIMA } from '@/components/library/DevotionalReader';
+import INDICE from '@/lib/content/ebook-indice.json';
+import { K_ULTIMA } from '@/components/library/chaves';
+import type { SeasonId } from '@/lib/content/seasons';
+
+const LIVRO = INDICE as { titulo: string; edicao: string; autora: string; capitulos: { slug: string; numero: number | null; titulo: string; epigrafe: string; estacao?: SeasonId; partes: number }[] };
+const CAPITULOS = LIVRO.capitulos;
+const getCapitulo = (s: string) => CAPITULOS.find((c) => c.slug === s);
 
 export default function Biblioteca() {
   const [ultima, setUltima] = useState<string | null>(null);
@@ -32,7 +37,7 @@ export default function Biblioteca() {
               <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full border border-line/40 font-display text-accent">{c.numero ? String(c.numero).padStart(2, '0') : '·'}</span>
               <span className="relative flex-1">
                 <span className="block font-serif text-[16px] leading-snug">{c.titulo}</span>
-                <span className="block text-[12px] text-muted">{c.epigrafe} · {c.secoes.length} {c.secoes.length === 1 ? 'parte' : 'partes'}</span>
+                <span className="block text-[12px] text-muted">{c.epigrafe} · {c.partes} {c.partes === 1 ? 'parte' : 'partes'}</span>
               </span>
               <ChevronRight size={18} className="relative text-muted" />
             </Link>

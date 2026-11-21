@@ -5,7 +5,7 @@ export function EmptyState({ titulo, texto, acao, icone }: { titulo: string; tex
   return (
     <div className="card flex flex-col items-center px-6 py-10 text-center animate-fade-up">
       <div className="mb-4 text-accent">{icone ?? <TowerMark className="h-14 w-10" glow={false} />}</div>
-      <h3 className="font-display text-xl">{titulo}</h3>
+      <h2 className="font-display text-xl">{titulo}</h2>
       {texto && <p className="mt-2 max-w-xs font-serif text-[15px] leading-relaxed text-muted">{texto}</p>}
       {acao && <div className="mt-6">{acao}</div>}
     </div>
@@ -24,7 +24,7 @@ export function LoadingState({ rotulo = 'Acendendo a lanterna…' }: { rotulo?: 
 export function ErrorState({ titulo = 'Algo não saiu como esperado', texto, onRetry }: { titulo?: string; texto?: string; onRetry?: () => void }) {
   return (
     <div role="alert" className="card border-vinho/60 px-6 py-8 text-center">
-      <h3 className="font-display text-lg">{titulo}</h3>
+      <h2 className="font-display text-lg">{titulo}</h2>
       {texto && <p className="mt-2 text-sm text-muted">{texto}</p>}
       {onRetry && <button className="btn-ghost mt-5" onClick={onRetry}>Tentar novamente</button>}
     </div>

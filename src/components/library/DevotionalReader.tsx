@@ -5,13 +5,12 @@ import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { ChevronLeft, ChevronRight, NotebookPen, AArrowDown, AArrowUp } from 'lucide-react';
 import type { Capitulo, Secao } from '@/lib/content/ebook';
-import { CAPITULOS } from '@/lib/content/ebook';
 import { prepararRascunho } from '@/lib/journal/draft';
 import type { TipoDiario } from '@/lib/store/schema';
 
 const TAMANHOS = ['text-[16px]', 'text-[17.5px]', 'text-[19px]', 'text-[21px]'];
 const K_TAM = 'sentinelas:leitura-tamanho';
-export const K_ULTIMA = 'sentinelas:ultima-leitura';
+import { K_ULTIMA } from './chaves';
 
 /** **negrito** simples vindo do conteúdo estruturado */
 function Rico({ t }: { t: string }) {
@@ -29,7 +28,9 @@ function tipoDiario(cap: Capitulo, s: Secao): TipoDiario {
   return 'Reflexão livre';
 }
 
-export function DevotionalReader({ cap }: { cap: Capitulo }) {
+type Vizinho = { slug: string; titulo: string } | null;
+
+export function DevotionalReader({ cap, ant, prox }: { cap: Capitulo; ant?: Vizinho; prox?: Vizinho }) {
   const router = useRouter();
   const [tam, setTam] = useState(1);
   useEffect(() => {
@@ -38,9 +39,6 @@ export function DevotionalReader({ cap }: { cap: Capitulo }) {
   }, [cap.slug]);
   const mudar = (d: number) => setTam((v) => { const n = Math.max(0, Math.min(TAMANHOS.length - 1, v + d)); try { localStorage.setItem(K_TAM, String(n)); } catch { /* noop */ } return n; });
 
-  const idx = CAPITULOS.findIndex((c) => c.slug === cap.slug);
-  const ant = CAPITULOS[idx - 1];
-  const prox = CAPITULOS[idx + 1];
 
   function registrar(s: Secao) {
     const perguntas = s.campos ?? (s.reflexao.includes('?') ? s.reflexao.split(/(?<=\?)\s+/) : []);

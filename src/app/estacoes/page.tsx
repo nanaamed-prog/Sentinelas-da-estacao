@@ -6,7 +6,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Field } from '@/components/ui/Field';
 import { getSeason, type SeasonId } from '@/lib/content/seasons';
 import Link from 'next/link';
-import { capituloDaEstacao, oracaoDaEstacao } from '@/lib/content/ebook';
+import ESTACOES from '@/lib/content/estacoes-conteudo.json';
 import { useDB, useStore } from '@/lib/store/provider';
 import { dataCurta } from '@/lib/utils/format';
 import type { SeasonRecord } from '@/lib/store/schema';
@@ -80,9 +80,10 @@ function Temas({ id }: { id: SeasonId }) {
 }
 
 function OracaoDaEstacao({ id }: { id: SeasonId }) {
-  const o = oracaoDaEstacao(id);
-  const cap = capituloDaEstacao(id);
-  if (!o || !cap) return null;
+  const e = (ESTACOES as Record<string, { slug: string; capitulo: string; oracao: { titulo: string; subtitulo: string; reflexao: string; leituras: string[] } }>)[id];
+  if (!e) return null;
+  const o = e.oracao;
+  const cap = { slug: e.slug, titulo: e.capitulo };
   return (
     <section className="leitura rounded-card px-5 py-5">
       <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8C5C22]">{o.titulo}</p>

@@ -9,6 +9,7 @@ import { ConfirmationDialog, Sheet } from '@/components/ui/Sheet';
 import { Field } from '@/components/ui/Field';
 import { useDB, useStore } from '@/lib/store/provider';
 import { useRouter } from 'next/navigation';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 
 export default function Configuracoes() {
   const db = useDB();
@@ -41,6 +42,7 @@ export default function Configuracoes() {
     <>
       <PageHeader eyebrow="Preferências" titulo="Configurações" />
       <div className="space-y-6">
+        <InstallPrompt />
         <section className="card space-y-4 p-4">
           <Field label="Como você gostaria de ser chamada?" htmlFor="nome">
             <input id="nome" className="field" value={nome} maxLength={60} onChange={(e) => setNome(e.target.value)} onBlur={() => store.setPreferences({ nome: nome.trim() })} />

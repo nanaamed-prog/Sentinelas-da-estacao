@@ -122,3 +122,4 @@ livro['subtitulo'] = 'Uma jornada de Palavra, oração e discernimento para cami
 livro['edicao'] = 'Edição única'
 json.dump(livro, open('/home/claude/sentinelas-da-estacao/src/lib/content/ebook.json', 'w'), ensure_ascii=False, indent=1)
 print('ok ajustes')
+exec(open(__file__.replace('build_ebook.py','derivados.py')).read())

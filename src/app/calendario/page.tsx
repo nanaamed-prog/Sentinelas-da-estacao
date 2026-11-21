@@ -37,7 +37,7 @@ export default function Calendario() {
         <div className="grid grid-cols-7 text-center text-[11px] font-semibold text-muted" aria-hidden="true">
           {SEMANA.map((d, i) => <span key={i} className="py-1">{d}</span>)}
         </div>
-        <div role="grid" className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-1" aria-label="Dias do mês">
           {grade.map((d, i) => {
             if (!d) return <span key={i} />;
             const k = chaveDia(d);

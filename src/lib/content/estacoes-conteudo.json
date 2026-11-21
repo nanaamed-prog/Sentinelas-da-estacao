@@ -1,0 +1,50 @@
+{
+ "primavera": {
+  "slug": "primavera",
+  "capitulo": "Primavera — Plante",
+  "oracao": {
+   "titulo": "Oração da primavera",
+   "subtitulo": "Use esta oração como ponto de partida e adapte com suas próprias palavras.",
+   "reflexao": "Pai, obrigado pelos começos que colocaste diante de mim. Dá-me sabedoria para plantar o que é bom, coragem para começar e paciência para não exigir resultados antes do tempo. Purifica minhas motivações, organiza minhas prioridades e firma a obra das minhas mãos conforme a Tua vontade.",
+   "leituras": [
+    "Salmo 90:17"
+   ]
+  }
+ },
+ "verao": {
+  "slug": "verao",
+  "capitulo": "Verão — Frutifique",
+  "oracao": {
+   "titulo": "Oração do verão",
+   "subtitulo": "Ore entregando a Deus tanto os resultados quanto a maneira de administrá-los.",
+   "reflexao": "Senhor Jesus, quero permanecer em Ti enquanto aquilo que plantei cresce. Dá-me sabedoria para administrar oportunidades, humildade para servir, coragem para estabelecer limites e caráter para não trocar integridade por resultados. Que meus frutos abençoem pessoas e apontem para Ti.",
+   "leituras": [
+    "João 15:5"
+   ]
+  }
+ },
+ "outono": {
+  "slug": "outono",
+  "capitulo": "Outono — Deixe Deus Podar",
+  "oracao": {
+   "titulo": "Oração do outono",
+   "subtitulo": "Ore com honestidade sobre aquilo que você teme perder.",
+   "reflexao": "Pai, conhece aquilo a que me apego e aquilo que me custa entregar. Dá-me discernimento para não abandonar o que devo sustentar nem insistir no que precisa ser encerrado. Consola-me nas perdas, corrige-me com amor e ensina-me a caminhar mais leve, sem amargura.",
+   "leituras": [
+    "Filipenses 4:6-7"
+   ]
+  }
+ },
+ "inverno": {
+  "slug": "inverno",
+  "capitulo": "Inverno — Permaneça",
+  "oracao": {
+   "titulo": "Oração do inverno",
+   "subtitulo": "Ore sem exigir de si mesma palavras perfeitas.",
+   "reflexao": "Senhor, quando eu não enxergar movimento, ajuda-me a permanecer. Sustenta minha fé, guarda meu coração da desesperança e dá-me coragem para cumprir o que cabe a mim. Que minhas raízes se aprofundem em Cristo e que eu não confunda silêncio com abandono.",
+   "leituras": [
+    "Salmo 46:1"
+   ]
+  }
+ }
+}

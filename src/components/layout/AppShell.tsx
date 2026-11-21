@@ -41,9 +41,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     if (pronto && !semMoldura && !db.preferencias.onboardingConcluido && !noOnboarding) router.replace('/boas-vindas/');
   }, [pronto, semMoldura, db.preferencias.onboardingConcluido, noOnboarding, router]);
 
-  if (semMoldura && hydrated && auth.pronto) return <>{children}</>;
+  if (semMoldura && hydrated && auth.pronto) return <main id="conteudo">{children}</main>;
   if (!pronto) return <LoadingState rotulo={auth.session && !auth.carregado ? 'Buscando seus registros…' : undefined} />;
-  if (noOnboarding) return <>{children}</>;
+  if (noOnboarding) return <main id="conteudo">{children}</main>;
   if (!db.preferencias.onboardingConcluido) return <LoadingState />;
 
   return (

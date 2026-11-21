@@ -8,5 +8,7 @@ export default async function CapituloPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const cap = getCapitulo(slug);
   if (!cap) notFound();
-  return <DevotionalReader cap={cap} />;
+  const i = CAPITULOS.indexOf(cap);
+  const viz = (c?: (typeof CAPITULOS)[number]) => (c ? { slug: c.slug, titulo: c.titulo } : null);
+  return <DevotionalReader cap={cap} ant={viz(CAPITULOS[i - 1])} prox={viz(CAPITULOS[i + 1])} />;
 }

@@ -5,6 +5,7 @@ import { WatchtowerHero } from '@/components/brand/Watchtower';
 import { JourneyProgress } from '@/components/journey/JourneyProgress';
 import { JORNADA } from '@/lib/content/journey';
 import { ScriptureReference } from '@/components/ui/ScriptureReference';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { useDB, useNow } from '@/lib/store/provider';
 import { currentPortal, formatHora, getPortal, nextPortal, nomePortal } from '@/lib/content/portals';
 import { getSeason } from '@/lib/content/seasons';
@@ -71,6 +72,8 @@ export default function MinhaTorre() {
       </div>
 
       <div className="card p-4"><ScriptureReference referencia={referenciaDoDia(now)} /></div>
+
+      <InstallPrompt compacto />
 
       <Resumo href="/altar/" Icon={HandHeart} eyebrow="Pedido do altar"
         titulo={prioritario?.titulo} sub={prioritario ? `${prioritario.categoria} · ${prioritario.status}` : undefined}
