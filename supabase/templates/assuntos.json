@@ -1,0 +1,22 @@
+[
+ {
+  "id": "confirmar-cadastro",
+  "onde": "Confirm sign up",
+  "assunto": "Confirme seu e-mail · Sentinelas da Estação"
+ },
+ {
+  "id": "redefinir-senha",
+  "onde": "Reset password",
+  "assunto": "Crie uma nova senha · Sentinelas da Estação"
+ },
+ {
+  "id": "alterar-email",
+  "onde": "Change email address",
+  "assunto": "Confirme seu novo e-mail · Sentinelas da Estação"
+ },
+ {
+  "id": "link-de-acesso",
+  "onde": "Magic link",
+  "assunto": "Seu link de acesso · Sentinelas da Estação"
+ }
+]
