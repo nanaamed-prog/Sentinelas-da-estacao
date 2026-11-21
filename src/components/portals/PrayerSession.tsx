@@ -65,8 +65,11 @@ export function PrayerSession({ portalId }: { portalId: PortalId }) {
         <div className="mt-2">{portal.explicacao ? <p>{portal.explicacao}</p> : <Pendente />}</div>
         <h3 className="mt-5 font-display text-base">Referências bíblicas</h3>
         <div className="mt-2">{portal.referencias?.length ? <p>{portal.referencias.join(' · ')}</p> : <Pendente>Referências do e-book a serem inseridas.</Pendente>}</div>
-        <h3 className="mt-5 font-display text-base">Oração orientativa</h3>
-        <div className="mt-2">{portal.oracaoOrientativa ? <p className="italic">{portal.oracaoOrientativa}</p> : <Pendente>Oração da autora a ser inserida.</Pendente>}</div>
+        {portal.perguntas?.length ? (<>
+          <h3 className="mt-5 font-display text-base">Para orar e registrar</h3>
+          <ul className="mt-2 list-disc space-y-1 pl-5 italic">{portal.perguntas.map((q) => <li key={q}>{q}</li>)}</ul>
+        </>) : null}
+        <Link href="/biblioteca/as-oito-vigilias/" className="mt-4 inline-block font-sans text-[13px] text-[#8C5C22] underline underline-offset-4">Ler “Os Oito Portais” na Biblioteca</Link>
       </section>
 
 

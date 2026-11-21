@@ -8,13 +8,17 @@ import { Field } from '@/components/ui/Field';
 import { useDB, useStore } from '@/lib/store/provider';
 import { TIPOS_DIARIO, type JournalEntry, type TipoDiario } from '@/lib/store/schema';
 import { dataCurta } from '@/lib/utils/format';
+import { RASCUNHO } from '@/lib/journal/draft';
 
 /** Modelos de escrita orientada. */
 const MODELOS: Partial<Record<TipoDiario, string[]>> = {
   Discernimento: ['O que aconteceu?', 'Como me sinto?', 'O que estou interpretando?', 'O que a Palavra deixa claro?', 'Que conselho preciso buscar?', 'Qual é o próximo passo prudente?'],
+  // do capítulo “Diário da Sentinela”
+  Palavra: ['Texto bíblico', 'Verdade central', 'O que preciso obedecer?'],
+  'Fechamento do dia': ['Pelo que agradeço?', 'Onde preciso pedir perdão?', 'O que aprendi?'],
+  Testemunho: ['Pedido original', 'O que aconteceu', 'Por que reconheço como resposta'],
 };
 
-const RASCUNHO = 'sentinelas:rascunho-diario';
 type Draft = { id?: string; tipo: TipoDiario; titulo: string; texto: string; referencia: string; marcadores: string };
 const vazio = (): Draft => ({ tipo: 'Reflexão livre', titulo: '', texto: '', referencia: '', marcadores: '' });
 
@@ -37,6 +41,12 @@ export default function Diario() {
     try { const r = localStorage.getItem(RASCUNHO); if (r) d = { ...d, ...JSON.parse(r), id: undefined }; } catch { /* sem rascunho */ }
     setEditor(d);
   }
+  // vindo da Biblioteca (“Registrar no meu diário”): abre o editor com o rascunho preparado
+  useEffect(() => {
+    if (location.hash.includes('novo')) { abrirNovo(); history.replaceState(null, '', location.pathname); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const abrir = (e: JournalEntry) => setEditor({ id: e.id, tipo: e.tipo, titulo: e.titulo, texto: e.texto, referencia: e.referencia, marcadores: e.marcadores.join(', ') });
 
   return (

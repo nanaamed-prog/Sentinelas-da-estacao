@@ -10,7 +10,8 @@ export const fromHash = (h: string) => {
   if (!s || s === 'inicio') return '/';
   const [a, ...b] = s.split('-');
   if (a === 'boas') return '/boas-vindas/';
-  return '/' + [a, ...b].join('/') + '/';
+  if (a === 'nova') return '/nova-senha/';
+  return b.length ? `/${a}/${b.join('-')}/` : `/${a}/`;
 };
 export function useHashPath() {
   const [p, setP] = useState(() => fromHash(location.hash));

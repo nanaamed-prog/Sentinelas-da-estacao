@@ -7,6 +7,9 @@ import Jornada from '@/app/jornada/page';
 import Calendario from '@/app/calendario/page';
 import Lembretes from '@/app/lembretes/page';
 import Testemunhos from '@/app/testemunhos/page';
+import Biblioteca from '@/app/biblioteca/page';
+import { DevotionalReader } from '@/components/library/DevotionalReader';
+import { getCapitulo } from '@/lib/content/ebook';
 import { AppShell } from '@/components/layout/AppShell';
 import { useHashPath } from './shims/router';
 import Torre from '@/app/page';
@@ -27,8 +30,9 @@ function Rotas() {
   if (!seg.length) page = <Torre />;
   else if (seg[0] === 'boas-vindas') page = <Onboarding />;
   else if (seg[0] === 'privacidade') page = <Privacidade />;
+  else if (seg[0] === 'biblioteca' && seg[1]) { const c = getCapitulo(seg[1]); page = c ? <DevotionalReader key={c.slug} cap={c} /> : <NotFound />; }
   else if (seg[0] === 'vigilias' && seg[1]) { const pt = getPortal(seg[1]); page = pt ? <PrayerSession key={pt.id} portalId={pt.id} /> : <NotFound />; }
-  else page = ({ vigilias: <Vigilias />, estacoes: <Estacoes />, altar: <Altar />, diario: <Diario />, configuracoes: <Config />, jornada: <Jornada />, calendario: <Calendario />, lembretes: <Lembretes />, testemunhos: <Testemunhos /> } as Record<string, React.ReactElement>)[seg[0]] ?? <NotFound />;
+  else page = ({ vigilias: <Vigilias />, estacoes: <Estacoes />, altar: <Altar />, diario: <Diario />, configuracoes: <Config />, jornada: <Jornada />, calendario: <Calendario />, lembretes: <Lembretes />, testemunhos: <Testemunhos />, biblioteca: <Biblioteca /> } as Record<string, React.ReactElement>)[seg[0]] ?? <NotFound />;
   return <AppShell>{page}</AppShell>;
 }
 

@@ -5,6 +5,8 @@ import { SeasonCard, SeasonSelector } from '@/components/seasons/SeasonCard';
 import { Sheet } from '@/components/ui/Sheet';
 import { Field } from '@/components/ui/Field';
 import { getSeason, type SeasonId } from '@/lib/content/seasons';
+import Link from 'next/link';
+import { capituloDaEstacao, oracaoDaEstacao } from '@/lib/content/ebook';
 import { useDB, useStore } from '@/lib/store/provider';
 import { dataCurta } from '@/lib/utils/format';
 import type { SeasonRecord } from '@/lib/store/schema';
@@ -34,6 +36,7 @@ export default function Estacoes() {
           <SeasonCard id={atual.estacao} selecionada />
           <p className="text-[13px] text-muted">Desde {dataCurta(atual.inicio)}</p>
           <Temas id={atual.estacao} />
+          <OracaoDaEstacao id={atual.estacao} />
           <Revisao key={atual.id} rec={atual} />
           <button className="btn-ghost w-full" onClick={() => setTrocar(true)}>Mudar de estação</button>
         </div>
@@ -73,6 +76,21 @@ function Temas({ id }: { id: SeasonId }) {
     <ul className="flex flex-wrap gap-2" aria-label="Temas da estação">
       {s.temas.map((t) => <li key={t} className="rounded-full border border-line/30 px-3 py-1 text-[13px]">{t}</li>)}
     </ul>
+  );
+}
+
+function OracaoDaEstacao({ id }: { id: SeasonId }) {
+  const o = oracaoDaEstacao(id);
+  const cap = capituloDaEstacao(id);
+  if (!o || !cap) return null;
+  return (
+    <section className="leitura rounded-card px-5 py-5">
+      <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8C5C22]">{o.titulo}</p>
+      {o.subtitulo && <p className="mt-1 font-sans text-[12px] text-[#6E6050]">{o.subtitulo}</p>}
+      <p className="mt-3 italic">{o.reflexao}</p>
+      {o.leituras.length > 0 && <p className="mt-3 font-sans text-[12px] text-[#6E6050]">{o.leituras.join(' · ')}</p>}
+      <Link href={`/biblioteca/${cap.slug}/`} className="mt-4 inline-block font-sans text-[13px] text-[#8C5C22] underline underline-offset-4">Ler o capítulo “{cap.titulo}”</Link>
+    </section>
   );
 }
 

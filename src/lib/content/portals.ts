@@ -1,5 +1,7 @@
 export type PortalId = 'imersao' | 'guerra' | 'alvorada' | 'colheita' | 'santidade' | 'sabedoria' | 'ocaso' | 'silencio';
 
+import { CAPITULOS } from './ebook';
+
 export interface Portal {
   id: PortalId;
   hora: number; // 0–23
@@ -14,6 +16,8 @@ export interface Portal {
   explicacao?: string;
   referencias?: string[];
   oracaoOrientativa?: string;
+  /** perguntas para orar e registrar (do e-book) */
+  perguntas?: string[];
 }
 
 /** Os oito portais exatamente como definidos no método. */
@@ -27,6 +31,13 @@ export const PORTALS: Portal[] = [
   { id: 'ocaso', hora: 18, nome: 'Ocaso', artigo: 'do', proposito: 'Recalibrar' },
   { id: 'silencio', hora: 21, nome: 'Silêncio', artigo: 'do', proposito: 'Entregar' },
 ];
+
+// Conteúdo de cada portal vem do capítulo “Os Oito Portais” do e-book
+const CAP_PORTAIS = CAPITULOS.find((c) => c.slug === 'as-oito-vigilias');
+for (const p of PORTALS) {
+  const sec = CAP_PORTAIS?.secoes.find((x) => x.titulo.includes(`Portal ${p.artigo} ${p.nome}`));
+  if (sec) { p.explicacao = sec.paragrafos.join(' '); p.referencias = sec.leituras; p.perguntas = sec.campos; }
+}
 
 export const getPortal = (id?: string | null) => PORTALS.find((p) => p.id === id);
 export const formatHora = (h: number) => `${String(h).padStart(2, '0')}:00`;
