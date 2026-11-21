@@ -10,6 +10,7 @@ import { LoadingState } from '@/components/ui/states';
 import { useDB, useHydrated } from '@/lib/store/provider';
 import { useAuth } from '@/lib/auth/provider';
 import { SyncBadge } from './SyncBadge';
+import { PortalNotifier } from './PortalNotifier';
 
 const SEM_MOLDURA = ['/entrar', '/nova-senha', '/privacidade'];
 
@@ -64,6 +65,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
       <main id="conteudo" className="mx-auto max-w-lg px-5 pb-nav pt-4">{children}</main>
       <BottomNavigation />
+      <PortalNotifier />
       <SecondaryMenu open={menu} onClose={() => setMenu(false)} />
     </div>
   );

@@ -66,7 +66,10 @@ export async function applyOp(sb: SupabaseClient, uid: string, op: Op): Promise<
       const p = op.prefs;
       ok(await sb.from('profiles').update({ nome: p.nome }).eq('id', uid));
       ok(await sb.from('user_preferences').upsert({ user_id: uid, tema: p.tema, onboarding_concluido: p.onboardingConcluido, lembretes: p.lembretes }));
-      ok(await sb.from('user_portal_settings').upsert(PORTALS.map((pt) => ({ user_id: uid, portal_id: pt.id, ativo: p.portaisAtivos.includes(pt.id) }))));
+      ok(await sb.from('user_portal_settings').upsert(PORTALS.map((pt) => ({
+        user_id: uid, portal_id: pt.id, ativo: p.portaisAtivos.includes(pt.id),
+        lembrete: p.portaisAtivos.includes(pt.id), horario_lembrete: p.horariosLembrete[pt.id] ?? null,
+      }))));
       return;
     }
     case 'estacao': {
@@ -133,7 +136,7 @@ export async function pullAll(sb: SupabaseClient, uid: string): Promise<DB> {
   const [perfil, prefs, portais, estacoes, vigilias, pedidos, atualizacoes, testemunhos, diario, jornada] = await Promise.all([
     sb.from('profiles').select('nome').eq('id', uid).maybeSingle(),
     sb.from('user_preferences').select('*').eq('user_id', uid).maybeSingle(),
-    sb.from('user_portal_settings').select('portal_id, ativo'),
+    sb.from('user_portal_settings').select('portal_id, ativo, horario_lembrete'),
     sb.from('season_history').select('*').order('inicio', { ascending: false }),
     sb.from('prayer_sessions').select('*').order('inicio', { ascending: false }),
     sb.from('prayer_requests').select('*').order('created_at', { ascending: false }),
@@ -150,6 +153,7 @@ export async function pullAll(sb: SupabaseClient, uid: string): Promise<DB> {
     onboardingConcluido: p.onboarding_concluido ?? false,
     lembretes: p.lembretes ?? false,
     portaisAtivos: (ok(portais as any) as any[]).filter((r) => r.ativo).map((r) => r.portal_id as PortalId),
+    horariosLembrete: Object.fromEntries((ok(portais as any) as any[]).filter((r) => r.horario_lembrete).map((r) => [r.portal_id, String(r.horario_lembrete).slice(0, 5)])),
   });
   db.estacoes = (ok(estacoes as any) as any[]).map((r) => ({
     id: r.id, estacao: r.estacao, inicio: r.inicio, fim: r.fim ?? undefined, motivos: r.motivos, reflexao: r.reflexao,

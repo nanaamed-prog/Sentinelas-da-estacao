@@ -13,7 +13,10 @@ export const preferencesSchema = z.object({
   onboardingConcluido: z.boolean().default(false),
   tema: z.enum(['noite', 'pergaminho']).default('noite'),
   portaisAtivos: z.array(portalId).default([]),
+  /** avisos dentro do app (enquanto estiver aberto) */
   lembretes: z.boolean().default(false),
+  /** horário do lembrete por portal (HH:MM); sem valor = horário do próprio portal */
+  horariosLembrete: z.partialRecord(portalId, z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/)).default({}),
 });
 
 export const seasonRecordSchema = z.object({

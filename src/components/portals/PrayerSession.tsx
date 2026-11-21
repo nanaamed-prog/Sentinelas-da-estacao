@@ -133,7 +133,7 @@ export function PrayerSession({ portalId }: { portalId: PortalId }) {
         {ativo ? <Bell className="text-accent" size={20} /> : <BellOff className="text-muted" size={20} />}
         <div className="flex-1">
           <p className="text-[15px]">{ativo ? 'Este portal faz parte da sua rotina' : 'Incluir este portal na minha rotina'}</p>
-          <p className="text-[12px] text-muted">Lembretes por notificação chegam na Fase 3, dependendo do suporte do seu aparelho.</p>
+          <Link href="/lembretes/" className="text-[12px] text-accent underline-offset-4 hover:underline">Configurar lembretes e horários</Link>
         </div>
         <button role="switch" aria-checked={ativo} aria-label="Incluir na rotina" onClick={() => store.togglePortal(portalId)}
           className={clsx('relative h-7 w-12 rounded-full transition', ativo ? 'bg-ouro' : 'bg-line/30')}>

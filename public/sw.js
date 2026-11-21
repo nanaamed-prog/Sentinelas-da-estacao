@@ -2,7 +2,7 @@
  * Estratégia: cache apenas de arquivos estáticos e páginas (conteúdo NÃO sensível).
  * Dados pessoais ficam no aparelho (Fase 1) ou no Supabase (Fase 2) e nunca entram no cache.
  */
-const VERSAO = 'sentinelas-v1';
+const VERSAO = 'sentinelas-v2';
 const ESSENCIAIS = ['/', '/manifest.webmanifest', '/icons/icon-192.png'];
 
 self.addEventListener('install', (e) => {
@@ -32,4 +32,14 @@ self.addEventListener('fetch', (e) => {
       const copia = res.clone(); caches.open(VERSAO).then((c) => c.put(req, copia)); return res;
     }).catch(() => caches.match(req).then((hit) => hit || caches.match('/'))));
   }
+});
+
+// Toque na notificação do portal abre a vigília
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || '/';
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((cs) => {
+    for (const c of cs) { if ('focus' in c) { c.navigate(url); return c.focus(); } }
+    return self.clients.openWindow(url);
+  }));
 });

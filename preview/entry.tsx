@@ -5,6 +5,8 @@ import { AuthProvider } from '@/lib/auth/provider';
 import Privacidade from '@/app/privacidade/page';
 import Jornada from '@/app/jornada/page';
 import Calendario from '@/app/calendario/page';
+import Lembretes from '@/app/lembretes/page';
+import Testemunhos from '@/app/testemunhos/page';
 import { AppShell } from '@/components/layout/AppShell';
 import { useHashPath } from './shims/router';
 import Torre from '@/app/page';
@@ -26,7 +28,7 @@ function Rotas() {
   else if (seg[0] === 'boas-vindas') page = <Onboarding />;
   else if (seg[0] === 'privacidade') page = <Privacidade />;
   else if (seg[0] === 'vigilias' && seg[1]) { const pt = getPortal(seg[1]); page = pt ? <PrayerSession key={pt.id} portalId={pt.id} /> : <NotFound />; }
-  else page = ({ vigilias: <Vigilias />, estacoes: <Estacoes />, altar: <Altar />, diario: <Diario />, configuracoes: <Config />, jornada: <Jornada />, calendario: <Calendario /> } as Record<string, React.ReactElement>)[seg[0]] ?? <NotFound />;
+  else page = ({ vigilias: <Vigilias />, estacoes: <Estacoes />, altar: <Altar />, diario: <Diario />, configuracoes: <Config />, jornada: <Jornada />, calendario: <Calendario />, lembretes: <Lembretes />, testemunhos: <Testemunhos /> } as Record<string, React.ReactElement>)[seg[0]] ?? <NotFound />;
   return <AppShell>{page}</AppShell>;
 }
 
