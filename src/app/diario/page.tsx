@@ -10,6 +10,10 @@ import { useDB, useStore } from '@/lib/store/provider';
 import { TIPOS_DIARIO, type JournalEntry, type TipoDiario } from '@/lib/store/schema';
 import { dataCurta } from '@/lib/utils/format';
 import { RASCUNHO } from '@/lib/journal/draft';
+import { JournalAttachments } from '@/components/journal/JournalAttachments';
+import { removerDoRegistro } from '@/lib/attachments/anexos';
+import { getSupabase } from '@/lib/supabase/client';
+import { useAuth } from '@/lib/auth/provider';
 
 /** Modelos de escrita orientada. */
 const MODELOS: Partial<Record<TipoDiario, string[]>> = {
@@ -105,6 +109,7 @@ export default function Diario() {
 
 function JournalEditor({ inicial, onDone }: { inicial: Draft; onDone: () => void }) {
   const store = useStore();
+  const auth = useAuth();
   const db = useDB();
   const [d, setD] = useState<Draft>(inicial);
   const [erro, setErro] = useState<string>();
@@ -142,12 +147,18 @@ function JournalEditor({ inicial, onDone }: { inicial: Draft; onDone: () => void
         <Field label="Referência bíblica" htmlFor="rf"><input id="rf" className="field" placeholder="Ex.: Salmos 23" value={d.referencia} onChange={(e) => setD({ ...d, referencia: e.target.value })} /></Field>
         <Field label="Marcadores" htmlFor="mk"><input id="mk" className="field" placeholder="separe por vírgula" value={d.marcadores} onChange={(e) => setD({ ...d, marcadores: e.target.value })} /></Field>
       </div>
-      {!d.id && <p className="text-[12px] text-muted">Rascunho salvo automaticamente neste aparelho.</p>}
+      {!d.id && <p className="text-[12px] text-muted">Rascunho salvo automaticamente neste aparelho.{auth.session ? ' Depois de salvar, abra o registro para anexar fotos e áudios.' : ''}</p>}
+      {d.id && <div className="rounded-xl border border-line/20 p-3"><JournalAttachments entryId={d.id} /></div>}
       <button className="btn-primary w-full" type="submit">Salvar registro</button>
       {d.id && <>
         <button type="button" className="min-h-11 w-full text-sm text-[#E79A8F]" onClick={() => setExcluir(true)}>Excluir registro</button>
         <ConfirmationDialog open={excluir} onClose={() => setExcluir(false)} perigo titulo="Excluir registro?" confirmar="Excluir"
-          texto="Este registro será apagado deste aparelho." onConfirm={() => { store.excluirRegistro(d.id!); onDone(); }} />
+          texto={auth.session ? 'Este registro e seus anexos serão apagados da sua conta.' : 'Este registro será apagado deste aparelho.'}
+          onConfirm={() => {
+            const sb = getSupabase(); const u = auth.session?.user.id;
+            if (sb && u) void removerDoRegistro(sb, u, d.id!).catch(() => undefined);
+            store.excluirRegistro(d.id!); onDone();
+          }} />
       </>}
     </form>
   );

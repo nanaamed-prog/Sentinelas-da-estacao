@@ -5,6 +5,7 @@ import { getSupabase, supabaseConfigurado } from '@/lib/supabase/client';
 import { useStore } from '@/lib/store/provider';
 import { SyncEngine, type SyncStatus } from '@/lib/sync/engine';
 import type { StorageAdapter } from '@/lib/store/store';
+import { removerTudo } from '@/lib/attachments/anexos';
 
 const DONO = 'sentinelas:dono';
 const disco = (uid: string): StorageAdapter => {
@@ -29,6 +30,8 @@ interface AuthCtx {
   carregado: boolean;
   sair: () => Promise<void>;
   excluirConta: () => Promise<void>;
+  /** envia agora o que estiver pendente (ex.: antes de anexar arquivos a um registro novo) */
+  sincronizarAgora: () => Promise<void>;
 }
 const Ctx = createContext<AuthCtx | null>(null);
 
@@ -97,8 +100,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await sb.auth.signOut();
       await limparAparelho(uid);
     },
+    async sincronizarAgora() { await engine.current?.flush(); },
     async excluirConta() {
       if (!sb) return;
+      if (session?.user.id) await removerTudo(sb, session.user.id).catch(() => undefined);
       const { error } = await sb.rpc('excluir_minha_conta');
       if (error) throw new Error(error.message);
       const uid = session?.user.id;

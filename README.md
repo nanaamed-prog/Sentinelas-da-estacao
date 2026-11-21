@@ -10,9 +10,9 @@ PWA instalável, mobile-first, em português brasileiro.
 | 1 — Fundação | design system, PWA, navegação, componentes, onboarding, Minha Torre | ✅ concluída |
 | 1+ (local) | Estações, Vigílias, Meu Altar (com Recalibrar), Diário, exportar/apagar dados — salvos **no aparelho** | ✅ funcional |
 | 2 — Contas e dados | Supabase: 19 tabelas com RLS, login, recuperação de senha, sincronização com fila offline, exclusão de conta, política de privacidade | ✅ código pronto · falta publicar |
-| 3 — Núcleo | lembretes, anexos, testemunhos dedicados | — |
-| 4 — Jornada e biblioteca | plano de 7 dias, leitor, calendário | — |
-| 5 — Assistente | modelos locais, consentimento, API opcional (server-side) | — |
+| 3 — Núcleo | lembretes (calendário do celular + aviso no app), anexos privados no diário, testemunhos | ✅ |
+| 4 — Jornada e biblioteca | plano de 7 dias, Biblioteca com o e-book, calendário, exportar diário, e-book em PDF | ✅ |
+| 5 — Assistente | modo local sem IA; IA avançada opcional (server-side) com consentimento, limite diário e histórico apagável | ✅ |
 | 6 — Finalização | auditoria de segurança, performance, publicação | — |
 
 ## Rodar

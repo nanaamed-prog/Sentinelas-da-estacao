@@ -89,7 +89,11 @@ export default function MinhaTorre() {
             <JourneyProgress ciclo={jornada} compacto />
           </> : <p className="text-[12px] text-muted">Começar a jornada</p>}
         </Link>
-        <EmBreve Icon={Sparkles} titulo="Assistente da Sentinela" texto="Disponível na Fase 5" />
+        <Link href="/assistente/" className="card block p-4">
+          <Sparkles size={20} strokeWidth={1.5} className="text-accent" />
+          <p className="mt-2 text-[14px] font-medium">Assistente da Sentinela</p>
+          <p className="text-[12px] text-muted">Ajuda para orar e refletir</p>
+        </Link>
       </div>
     </div>
   );
@@ -108,15 +112,5 @@ function Resumo({ href, Icon, eyebrow, titulo, sub, vazio }: { href: string; Ico
       </span>
       <ChevronRight className="text-muted" size={18} />
     </Link>
-  );
-}
-
-function EmBreve({ Icon, titulo, texto }: { Icon: typeof Flame; titulo: string; texto: string }) {
-  return (
-    <div className="rounded-card border border-dashed border-line/30 p-4 opacity-80">
-      <Icon size={20} strokeWidth={1.5} className="text-accent" />
-      <p className="mt-2 text-[14px] font-medium">{titulo}</p>
-      <p className="text-[12px] text-muted">{texto}</p>
-    </div>
   );
 }

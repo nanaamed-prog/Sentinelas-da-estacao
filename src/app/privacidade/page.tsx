@@ -35,8 +35,10 @@ export default function Privacidade() {
           Essa transferência internacional é necessária para a prestação do serviço.</p>
 
         <h2>Inteligência artificial</h2>
-        <p>A assistente de oração é opcional. Nenhum texto pessoal será enviado a serviços externos de IA sem o seu consentimento
-          expresso, que poderá ser retirado a qualquer momento, junto com o histórico da assistente.</p>
+        <p>A assistente de oração é opcional. No modo local, nada sai do seu aparelho. A IA avançada, quando ativada, envia somente
+          a mensagem e o contexto que você marcar ao provedor Anthropic para gerar a resposta, e apenas depois do seu consentimento
+          expresso — que pode ser retirado a qualquer momento. Diário e testemunhos não são enviados. O histórico das conversas fica
+          na sua conta e pode ser apagado por você. Seu conteúdo não é usado por este aplicativo para treinar modelos.</p>
 
         <h2>Seus direitos</h2>
         <p>Você pode, a qualquer momento, dentro do aplicativo em Configurações: exportar todos os seus dados e excluir sua conta —
