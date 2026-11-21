@@ -37,6 +37,20 @@ export default function Entrar() {
 
   useEffect(() => { if (session) router.replace('/'); }, [session, router]);
 
+  // Volta do link de e-mail: mostra o resultado em vez de um erro técnico
+  useEffect(() => {
+    const p = new URLSearchParams(location.search + '&' + location.hash.replace(/^#/, ''));
+    const codigo = p.get('error_code') ?? '';
+    if (p.get('error') || codigo) {
+      setMsg(codigo.includes('expired') || codigo === 'otp_expired'
+        ? { tipo: 'erro', texto: 'Este link expirou ou já foi usado. Se você já confirmou o e-mail, é só entrar com sua senha.' }
+        : { tipo: 'erro', texto: 'Não foi possível abrir este link. Se você já confirmou o e-mail, entre com sua senha.' });
+    } else if (p.get('code') || p.get('type') === 'signup') {
+      setMsg({ tipo: 'ok', texto: 'E-mail confirmado! Agora entre com seu e-mail e senha.' });
+    }
+    if (location.search || location.hash) history.replaceState(null, '', location.pathname);
+  }, []);
+
   async function enviar(e: React.FormEvent) {
     e.preventDefault();
     if (!sb) return;

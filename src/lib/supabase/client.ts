@@ -10,7 +10,7 @@ let client: SupabaseClient | null = null;
 export function getSupabase(): SupabaseClient | null {
   if (!supabaseConfigurado) return null;
   client ??= createClient(url!, key!, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' },
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' /* links de e-mail funcionam em qualquer navegador (ex.: abertos pelo app do Gmail) */ },
   });
   return client;
 }

@@ -29,7 +29,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   // sem conta → entrar; link de recuperação → nova senha
   useEffect(() => {
-    if (precisaEntrar) router.replace('/entrar/');
+    if (precisaEntrar) router.replace('/entrar/' + location.search + location.hash); // preserva avisos do link de e-mail
     else if (auth.recuperandoSenha && !pathname.startsWith('/nova-senha')) router.replace('/nova-senha/');
   }, [precisaEntrar, auth.recuperandoSenha, pathname, router]);
 
