@@ -1,7 +1,7 @@
 {
  "titulo": "Sentinelas da Estação",
  "autora": "Naiara de Medeiros",
- "edicao": "Edição Torre de Vigília",
+ "edicao": "Edição única",
  "capitulos": [
   {
    "slug": "a-jornada-da-sentinela",
@@ -13,7 +13,7 @@
      "titulo": "Uma nova jornada",
      "subtitulo": "",
      "paragrafos": [
-      "Esta edição foi redesenhada para ser lida como uma caminhada, não como uma coleção de páginas isoladas. Cada capítulo apresenta uma verdade bíblica, uma reflexão, uma oração e uma prática de registro.",
+      "Este e-book foi pensado para ser lido como uma caminhada, não como uma coleção de páginas isoladas. Cada capítulo apresenta uma verdade bíblica, uma reflexão, uma oração e uma prática de registro.",
       "A imagem das estações é uma metáfora devocional. Primavera, verão, outono e inverno não determinam o que Deus fará. Os portais são horários de atenção e oração; não são fontes de revelação nem condições para que Deus ouça."
      ],
      "leituras": [],
@@ -60,7 +60,7 @@
       "1 Tessalonicenses 5:21"
      ],
      "destaque": "",
-     "reflexao": "Senhor, dá-me sabedoria para distinguir fé de ansiedade e obediência de pressa."
+     "reflexao": "Senhor, dá-me sabedoria para distinguir fé de ansiedade e obediência de pressa. Ensina-me a confiar em Ti sem inventar respostas. Em nome de Jesus, amém."
     }
    ]
   },
@@ -1038,5 +1038,6 @@
     }
    ]
   }
- ]
+ ],
+ "subtitulo": "Uma jornada de Palavra, oração e discernimento para caminhar com Deus em cada tempo"
 }

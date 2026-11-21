@@ -14,7 +14,7 @@ export interface Secao {
 }
 export interface Capitulo { slug: string; numero: number | null; titulo: string; epigrafe: string; estacao?: SeasonId; secoes: Secao[] }
 
-export const LIVRO = livro as { titulo: string; autora: string; edicao: string; capitulos: Capitulo[] };
+export const LIVRO = livro as { titulo: string; subtitulo: string; autora: string; edicao: string; capitulos: Capitulo[] };
 export const CAPITULOS = LIVRO.capitulos;
 export const getCapitulo = (slug: string) => CAPITULOS.find((c) => c.slug === slug);
 export const capituloDaEstacao = (id: SeasonId) => CAPITULOS.find((c) => c.estacao === id);

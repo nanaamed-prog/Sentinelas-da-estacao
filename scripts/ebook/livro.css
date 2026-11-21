@@ -1,0 +1,94 @@
+/* Sentinelas da Estação — e-book (A5). Mesmos tokens do app. */
+@font-face { font-family: 'Playfair Display'; font-weight: 400; src: url('FONTES/playfair-display/files/playfair-display-latin-400-normal.woff2'); }
+@font-face { font-family: 'Playfair Display'; font-weight: 600; src: url('FONTES/playfair-display/files/playfair-display-latin-600-normal.woff2'); }
+@font-face { font-family: 'Playfair Display'; font-weight: 400; font-style: italic; src: url('FONTES/playfair-display/files/playfair-display-latin-400-italic.woff2'); }
+@font-face { font-family: 'Lora'; font-weight: 400; src: url('FONTES/lora/files/lora-latin-400-normal.woff2'); }
+@font-face { font-family: 'Lora'; font-weight: 600; src: url('FONTES/lora/files/lora-latin-600-normal.woff2'); }
+@font-face { font-family: 'Lora'; font-weight: 400; font-style: italic; src: url('FONTES/lora/files/lora-latin-400-italic.woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 400; src: url('FONTES/inter/files/inter-latin-400-normal.woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 600; src: url('FONTES/inter/files/inter-latin-600-normal.woff2'); }
+
+:root { --noite: #111C29; --noite9: #0B131D; --vinho: #632B2A; --ouro: #C58B42; --ouro-escuro: #8C5C22; --pergaminho: #F2E7D6; --marfim: #FFF9EF; --tinta: #302820; --suave: #6E6050; }
+
+@page { size: 148mm 210mm; margin: 17mm 15mm 19mm; background: var(--marfim); }
+@page cheia { margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; background: var(--marfim); color: var(--tinta); font-family: 'Lora', Georgia, serif; font-size: 10.6pt; line-height: 1.62; hyphens: auto; }
+
+.marcador { position: absolute; font-size: 1px; color: transparent; opacity: .01; }
+
+/* ---------- capa ---------- */
+.capa { page: cheia; position: relative; width: 148mm; height: 210mm; overflow: hidden; background: var(--noite9); break-after: page; }
+.capa-texto { position: absolute; top: 15mm; left: 0; right: 0; text-align: center; color: var(--marfim); }
+.capa-lema { font-family: 'Inter'; font-weight: 600; font-size: 6.6pt; letter-spacing: .42em; text-transform: uppercase; color: #E2B97F; margin: 0 0 7mm; }
+.capa-titulo { font-family: 'Playfair Display'; font-weight: 400; font-size: 40pt; letter-spacing: .1em; text-transform: uppercase; color: var(--ouro); margin: 0; line-height: 1; }
+.capa-da { font-family: 'Playfair Display'; font-size: 14pt; letter-spacing: .42em; text-transform: uppercase; color: #E2B97F; margin: 3mm 0 0; }
+.capa-fio { width: 22mm; height: .4mm; background: var(--ouro); margin: 7mm auto 6mm; opacity: .8; }
+.capa-sub { hyphens: none; font-family: 'Lora'; font-style: italic; font-size: 9.6pt; line-height: 1.5; color: rgba(255,249,239,.88); margin: 0 auto; max-width: 92mm; }
+.capa-autora { position: absolute; bottom: 12mm; right: 13mm; margin: 0; font-family: 'Playfair Display'; font-size: 12.5pt; letter-spacing: .14em; color: var(--marfim); text-align: right; }
+
+/* ---------- páginas cheias (aberturas, rosto, contracapa) ---------- */
+.rosto, .abertura, .contracapa { page: cheia; position: relative; width: 148mm; height: 210mm; overflow: hidden; break-before: page; break-after: page; }
+.contracapa { break-before: auto; break-after: auto; }
+.rosto { background: var(--marfim); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20mm; }
+.rosto-torre { width: 14mm; height: 21mm; }
+.rosto h1 { font-family: 'Playfair Display'; font-weight: 400; font-size: 22pt; letter-spacing: .06em; margin: 6mm 0 3mm; color: var(--noite); }
+.rosto-sub { font-style: italic; color: var(--suave); max-width: 90mm; margin: 0; }
+.rosto-autora { font-family: 'Playfair Display'; letter-spacing: .14em; margin: 10mm 0 0; color: var(--ouro-escuro); }
+.rosto-copy { position: absolute; bottom: 14mm; left: 18mm; right: 18mm; font-family: 'Inter'; font-size: 6.4pt; line-height: 1.6; color: var(--suave); }
+
+.abertura { background: linear-gradient(180deg, var(--noite9) 0%, var(--noite) 55%, #2A1E2A 100%); color: var(--marfim); }
+.abertura-arte { position: absolute; left: 0; right: 0; bottom: 0; height: 88mm; opacity: .9; }
+.abertura-arte svg { width: 100%; height: 100%; display: block; }
+.abertura-arte::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, var(--noite) 0%, rgba(17,28,41,.25) 45%, rgba(17,28,41,0) 100%); z-index: 1; }
+.abertura-texto { position: absolute; top: 40mm; left: 16mm; right: 16mm; text-align: center; }
+.abertura-torre { width: 11mm; height: 16.5mm; }
+.abertura-num { font-family: 'Inter'; font-weight: 600; font-size: 7pt; letter-spacing: .4em; text-transform: uppercase; color: #E2B97F; margin: 7mm 0 0; }
+.abertura-titulo { font-family: 'Playfair Display'; font-weight: 400; font-size: 25pt; line-height: 1.15; letter-spacing: .03em; margin: 4mm 0 0; color: var(--marfim); }
+.abertura-epigrafe { font-style: italic; color: #E2B97F; margin: 5mm 0 0; font-size: 11pt; }
+.abertura-epigrafe::before { content: ''; display: block; width: 14mm; height: .35mm; background: var(--ouro); margin: 0 auto 5mm; }
+
+.contracapa { background: linear-gradient(180deg, var(--noite) 0%, var(--noite9) 100%); color: var(--marfim); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 22mm; }
+.contra-torre { width: 13mm; height: 19.5mm; }
+.contra-lema { font-family: 'Playfair Display'; font-size: 14pt; letter-spacing: .08em; color: var(--ouro); margin: 8mm 0 6mm; }
+.contra-texto { font-style: italic; font-size: 10pt; color: rgba(255,249,239,.85); margin: 0; }
+.contra-autora { font-family: 'Playfair Display'; letter-spacing: .16em; margin: 12mm 0 0; color: #E2B97F; }
+
+/* ---------- miolo ---------- */
+.eyebrow { font-family: 'Inter'; font-weight: 600; font-size: 6.8pt; letter-spacing: .28em; text-transform: uppercase; color: var(--ouro-escuro); margin: 0; }
+.intro, .sumario { break-before: page; break-after: page; position: relative; }
+.intro h1, .sumario h1 { font-family: 'Playfair Display'; font-weight: 400; font-size: 22pt; margin: 2mm 0 5mm; color: var(--noite); }
+.intro p { margin: 0 0 3.5mm; }
+.intro-pilares { font-family: 'Inter'; font-weight: 600; font-size: 6.8pt !important; letter-spacing: .22em; text-transform: uppercase; color: var(--ouro-escuro); text-align: center; margin: 10mm 0 4mm !important; }
+.intro-lema { text-align: center; font-family: 'Playfair Display'; font-style: italic; font-size: 12pt; color: var(--vinho); }
+
+.sumario ol { list-style: none; padding: 0; margin: 0; }
+.sumario li { display: flex; align-items: baseline; gap: 3mm; padding: 1.35mm 0; border-bottom: .2mm solid rgba(197,139,66,.35); }
+.sumario .n { width: 7mm; font-family: 'Playfair Display'; color: var(--ouro-escuro); }
+.sumario .t { flex: 1; font-family: 'Playfair Display'; font-size: 10.5pt; line-height: 1.25; }
+.sumario .t em { display: block; font-family: 'Lora'; font-size: 7.8pt; line-height: 1.3; color: var(--suave); }
+.sumario .p { font-family: 'Inter'; font-size: 8pt; color: var(--suave); }
+
+.corpo { break-before: page; }
+.secao { margin: 0 0 11mm; position: relative; }
+.secao + .secao { padding-top: 7mm; }
+.secao + .secao::before { content: '✦'; position: absolute; top: -2mm; left: 50%; transform: translateX(-50%); color: var(--ouro); font-size: 8pt; }
+.secao h2 { hyphens: none; font-family: 'Playfair Display'; font-weight: 400; font-size: 16.5pt; line-height: 1.22; color: var(--noite); margin: 0 0 1.5mm; break-after: avoid; }
+.secao .sub { text-align: left !important; font-family: 'Inter'; font-weight: 600; font-size: 6.6pt; letter-spacing: .2em; text-transform: uppercase; color: var(--ouro-escuro); margin: 0 0 4mm; break-after: avoid; }
+.secao p { margin: 0 0 3mm; text-align: justify; orphans: 3; widows: 3; }
+.secao p.abre::first-letter { font-family: 'Playfair Display'; float: left; font-size: 30pt; line-height: .9; padding: 1.2mm 1.6mm 0 0; color: var(--vinho); }
+.secao strong { font-weight: 600; color: var(--vinho); }
+blockquote { margin: 5mm 4mm; padding: 0 0 0 4mm; border-left: .6mm solid var(--ouro); font-family: 'Playfair Display'; font-style: italic; font-size: 11.5pt; color: var(--vinho); break-inside: avoid; }
+.leituras { font-family: 'Inter'; font-size: 7.6pt !important; color: var(--tinta); text-align: left !important; margin: 4mm 0 0 !important; break-inside: avoid; }
+.leituras span { display: block; font-weight: 600; font-size: 6.4pt; letter-spacing: .22em; text-transform: uppercase; color: var(--ouro-escuro); margin-bottom: 1mm; }
+.reflexao { margin-top: 4.5mm; padding: 4.5mm 5mm; background: var(--pergaminho); border-radius: 3mm; break-inside: avoid; }
+.reflexao .rotulo, .nota-portais .rotulo { font-family: 'Inter'; font-weight: 600; font-size: 6.4pt; letter-spacing: .22em; text-transform: uppercase; color: var(--ouro-escuro); margin: 0 0 2mm; }
+.reflexao .texto { font-style: italic; margin: 0; text-align: left; }
+.campo p { font-style: italic; margin: 2.5mm 0 0 !important; text-align: left !important; }
+.linhas span { display: block; height: 6.2mm; border-bottom: .25mm solid rgba(140,92,34,.4); }
+
+.nota-portais { padding: 5mm; border: .3mm solid rgba(197,139,66,.6); border-radius: 3mm; margin: 0 0 8mm; break-inside: avoid; }
+.nota-portais ul { margin: 0; padding-left: 5mm; font-style: italic; }
+.secao.portal { break-inside: avoid; margin-bottom: 7mm; }
+.secao.portal h2 { display: flex; align-items: baseline; gap: 3mm; font-size: 14pt; }
+.portal-hora { font-family: 'Inter'; font-weight: 600; font-size: 8pt; letter-spacing: .1em; color: var(--marfim); background: var(--noite); padding: .8mm 2.2mm; border-radius: 1.5mm; }

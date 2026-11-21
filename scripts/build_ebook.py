@@ -112,5 +112,13 @@ for c in livro['capitulos']:
         s['paragrafos'] = [maiuscula_apos_ponto(p) for p in s['paragrafos'] if p.strip()]
         if s['titulo'] == 'Quatro perguntas de discernimento':
             s['campos'] = ['Fatos: o que aconteceu de verdade?', 'Interpretação: o que você concluiu?', 'Palavra: o que é claro biblicamente?']
+for c in livro['capitulos']:
+    for s in c['secoes']:
+        if s['titulo'] == 'Confiar sem compreender':  # final completo vem da Segunda Edição
+            s['reflexao'] = 'Senhor, dá-me sabedoria para distinguir fé de ansiedade e obediência de pressa. Ensina-me a confiar em Ti sem inventar respostas. Em nome de Jesus, amém.'
+        if s['titulo'] == 'Uma nova jornada':
+            s['paragrafos'][0] = s['paragrafos'][0].replace('Esta edição foi redesenhada para ser lida como uma caminhada', 'Este e-book foi pensado para ser lido como uma caminhada')
+livro['subtitulo'] = 'Uma jornada de Palavra, oração e discernimento para caminhar com Deus em cada tempo'
+livro['edicao'] = 'Edição única'
 json.dump(livro, open('/home/claude/sentinelas-da-estacao/src/lib/content/ebook.json', 'w'), ensure_ascii=False, indent=1)
 print('ok ajustes')
