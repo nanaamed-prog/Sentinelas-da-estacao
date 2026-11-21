@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { Plus, Search, Star, NotebookPen } from 'lucide-react';
+import { Plus, Search, Star, NotebookPen, Share2 } from 'lucide-react';
+import { diarioEmTexto, compartilharOuBaixar } from '@/lib/journal/export';
 import { PageHeader, EmptyState } from '@/components/ui/states';
 import { Sheet, ConfirmationDialog } from '@/components/ui/Sheet';
 import { Field } from '@/components/ui/Field';
@@ -52,6 +53,12 @@ export default function Diario() {
   return (
     <>
       <PageHeader eyebrow="Diário da Sentinela" titulo="Diário">Registre o que Deus tem colocado no seu coração.</PageHeader>
+      {db.diario.length > 0 && (
+        <button className="-mt-3 mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-full border border-line/30 px-4 text-[13px] text-accent"
+          onClick={() => void compartilharOuBaixar(diarioEmTexto(lista, db.preferencias.nome), `diario-da-sentinela-${new Date().toISOString().slice(0, 10)}.txt`)}>
+          <Share2 size={14} /> Exportar {lista.length === db.diario.length ? 'diário' : `${lista.length} registro${lista.length === 1 ? '' : 's'} filtrado${lista.length === 1 ? '' : 's'}`}
+        </button>
+      )}
 
       <div className="relative mb-3">
         <Search size={18} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />

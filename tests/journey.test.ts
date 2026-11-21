@@ -61,3 +61,18 @@ describe('Calendário', () => {
     expect(g.filter(Boolean)).toHaveLength(30);
   });
 });
+
+import { diarioEmTexto } from '@/lib/journal/export';
+describe('Exportar diário', () => {
+  it('gera texto legível em ordem cronológica', () => {
+    const s = new Store(memoryStorage());
+    s.salvarRegistro({ titulo: 'Segundo', data: '2026-11-21T10:00:00.000Z', texto: 'B' });
+    s.salvarRegistro({ titulo: 'Primeiro', data: '2026-11-20T10:00:00.000Z', texto: 'A', tipo: 'Gratidão', referencia: 'Salmo 103:2', estacao: 'outono', marcadores: ['família'] });
+    const t = diarioEmTexto(s.getSnapshot().diario, 'Naiara');
+    expect(t).toContain('DIÁRIO DA SENTINELA');
+    expect(t).toContain('Naiara');
+    expect(t.indexOf('Primeiro')).toBeLessThan(t.indexOf('Segundo'));
+    expect(t).toContain('Gratidão · Salmo 103:2 · Outono');
+    expect(t).toContain('Marcadores: família');
+  });
+});
