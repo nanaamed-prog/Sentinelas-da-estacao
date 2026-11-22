@@ -1,7 +1,7 @@
 """Gera arquivos pequenos derivados do e-book, para cada tela baixar só o que usa."""
 import json, os
 base = os.path.join(os.path.dirname(__file__), '..', 'src', 'lib', 'content')
-livro = json.load(open(os.path.join(base, 'ebook.json')))
+livro = json.load(open(os.path.join(base, '..', 'conteudo-pago', 'ebook.json')))
 caps = {c['slug']: c for c in livro['capitulos']}
 portais = {}
 for s in caps['as-oito-vigilias']['secoes']:

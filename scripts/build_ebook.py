@@ -97,7 +97,7 @@ caps = [
    {'titulo': 'Reflexão e oração', 'subtitulo': '', 'paragrafos': ['Não é preciso conhecer todos os caminhos para caminhar com fidelidade hoje. Volte à Palavra. Ore com sinceridade. Examine tudo. Permaneça em Cristo.'], 'leituras': [], 'destaque': '', 'reflexao': ''}]),
 ]
 livro = {'titulo': 'Sentinelas da Estação', 'autora': 'Naiara de Medeiros', 'edicao': 'Edição Torre de Vigília', 'capitulos': caps}
-json.dump(livro, open('/home/claude/sentinelas-da-estacao/src/lib/content/ebook.json', 'w'), ensure_ascii=False, indent=1)
+json.dump(livro, open('/home/claude/sentinelas-da-estacao/src/lib/conteudo-pago/ebook.json', 'w'), ensure_ascii=False, indent=1)
 print(sum(len(c['secoes']) for c in caps), 'seções em', len(caps), 'capítulos')
 
 # ---- ajustes finais ----
@@ -120,6 +120,6 @@ for c in livro['capitulos']:
             s['paragrafos'][0] = s['paragrafos'][0].replace('Esta edição foi redesenhada para ser lida como uma caminhada', 'Este e-book foi pensado para ser lido como uma caminhada')
 livro['subtitulo'] = 'Uma jornada de Palavra, oração e discernimento para caminhar com Deus em cada tempo'
 livro['edicao'] = 'Edição única'
-json.dump(livro, open('/home/claude/sentinelas-da-estacao/src/lib/content/ebook.json', 'w'), ensure_ascii=False, indent=1)
+json.dump(livro, open('/home/claude/sentinelas-da-estacao/src/lib/conteudo-pago/ebook.json', 'w'), ensure_ascii=False, indent=1)
 print('ok ajustes')
 exec(open(__file__.replace('build_ebook.py','derivados.py')).read())

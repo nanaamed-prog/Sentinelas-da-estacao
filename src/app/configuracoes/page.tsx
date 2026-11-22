@@ -103,7 +103,7 @@ export default function Configuracoes() {
         <button className="btn mt-5 w-full bg-vinho text-marfim disabled:opacity-40" disabled={confirmacao.trim().toUpperCase() !== 'EXCLUIR'}
           onClick={async () => {
             try { await auth.excluirConta(); router.replace('/entrar/'); }
-            catch { aviso('Não foi possível excluir agora. Verifique a conexão e tente de novo.'); setExcluirConta(false); }
+            catch (e) { aviso(/assinatura_renovando/.test(String(e)) ? 'Antes de excluir a conta, cancele a renovação em Minha assinatura.' : 'Não foi possível excluir agora. Verifique a conexão e tente de novo.'); setExcluirConta(false); }
           }}>Excluir definitivamente</button>
       </Sheet>
 

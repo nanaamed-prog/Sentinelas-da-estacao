@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { CAPITULOS, LIVRO, oracaoDaEstacao } from '@/lib/content/ebook';
+import { CAPITULOS, LIVRO } from '@/lib/conteudo-pago/biblioteca';
+import type { SeasonId } from '@/lib/content/seasons';
+const oracaoDaEstacao = (id: SeasonId) => CAPITULOS.find((c) => c.estacao === id)?.secoes.find((s) => s.titulo.startsWith('Oração d'));
 import { PORTALS } from '@/lib/content/portals';
 
 describe('Biblioteca (e-book)', () => {

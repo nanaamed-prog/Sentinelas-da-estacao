@@ -9,6 +9,7 @@ import '@fontsource/inter/600.css';
 import '@/styles/globals.css';
 import { StoreProvider } from '@/lib/store/provider';
 import { AuthProvider } from '@/lib/auth/provider';
+import { AssinaturaProvider } from '@/lib/assinatura/cliente';
 import { AppShell } from '@/components/layout/AppShell';
 import { ServiceWorker } from '@/components/layout/ServiceWorker';
 
@@ -36,7 +37,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <StoreProvider>
           <AuthProvider>
-            <AppShell>{children}</AppShell>
+            <AssinaturaProvider>
+              <AppShell>{children}</AppShell>
+            </AssinaturaProvider>
           </AuthProvider>
         </StoreProvider>
         <ServiceWorker />

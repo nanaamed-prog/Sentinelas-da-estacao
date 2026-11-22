@@ -15,6 +15,9 @@ import { getSeason } from '@/lib/content/seasons';
 import { AVISO, ORIENTACAO_RECALIBRAR, PERGUNTAS_RECALIBRAR, montarPlano, ondeAparece, organizarPedidos, perguntasDeReflexao } from '@/lib/assistant/local';
 import { prepararRascunho } from '@/lib/journal/draft';
 import { useRouter } from 'next/navigation';
+import { useConteudo } from '@/lib/assinatura/cliente';
+import { RecursoCompleto } from '@/components/assinatura/RecursoCompleto';
+import type { Biblioteca } from '@/lib/content/ebook';
 
 export default function Assistente() {
   const [modo, setModo] = useState<'local' | 'ia'>('local');
@@ -28,7 +31,7 @@ export default function Assistente() {
             className={clsx('min-h-10 rounded-full text-[13px] font-medium', modo === k ? 'bg-ouro text-noite' : 'text-muted')}>{l}</button>
         ))}
       </div>
-      {modo === 'local' ? <ModoLocal /> : <ModoIA />}
+      <RecursoCompleto recurso={modo === 'local' ? 'assistente' : 'ia'}>{modo === 'local' ? <ModoLocal /> : <ModoIA />}</RecursoCompleto>
     </>
   );
 }
@@ -57,10 +60,12 @@ function ModoLocal() {
   const [ref, setRef] = useState('');
   const pedido = abertos.find((p) => p.id === pedidoId);
   const estacao = db.estacoes.find((e) => !e.fim)?.estacao;
-  const reflexao = useMemo(() => perguntasDeReflexao(estacao, portal), [estacao, portal]);
+  const { dados: bib } = useConteudo<Biblioteca>('biblioteca');
+  const caps = useMemo(() => bib?.capitulos ?? [], [bib]);
+  const reflexao = useMemo(() => perguntasDeReflexao(estacao, portal, caps), [estacao, portal, caps]);
   const org = useMemo(() => organizarPedidos(db.pedidos), [db.pedidos]);
-  const plano = useMemo(() => montarPlano(db), [db]);
-  const achados = useMemo(() => ondeAparece(ref), [ref]);
+  const plano = useMemo(() => montarPlano(db, caps), [db, caps]);
+  const achados = useMemo(() => ondeAparece(ref, caps), [ref, caps]);
   const t = (k: string) => () => setAberto(aberto === k ? '' : k);
 
   const seletorPedido = abertos.length ? (

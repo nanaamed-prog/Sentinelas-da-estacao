@@ -14,6 +14,7 @@ import { JournalAttachments } from '@/components/journal/JournalAttachments';
 import { removerDoRegistro } from '@/lib/attachments/anexos';
 import { getSupabase } from '@/lib/supabase/client';
 import { useAuth } from '@/lib/auth/provider';
+import { AvisoCompleto, useCompleto } from '@/components/assinatura/RecursoCompleto';
 
 /** Modelos de escrita orientada. */
 const MODELOS: Partial<Record<TipoDiario, string[]>> = {
@@ -41,7 +42,9 @@ export default function Diario() {
       (!t || [e.titulo, e.texto, e.referencia, ...e.marcadores].some((x) => x.toLowerCase().includes(t))));
   }, [db.diario, q, tipo]);
 
+  const completo = useCompleto();
   function abrirNovo() {
+    if (!completo) return;
     let d = vazio();
     try { const r = localStorage.getItem(RASCUNHO); if (r) d = { ...d, ...JSON.parse(r), id: undefined }; } catch { /* sem rascunho */ }
     setEditor(d);
@@ -64,6 +67,7 @@ export default function Diario() {
         </button>
       )}
 
+      {!completo && <div className="mb-4"><AvisoCompleto recurso="diario" compacto /></div>}
       <div className="relative mb-3">
         <Search size={18} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
         <input type="search" aria-label="Pesquisar no diário" placeholder="Pesquisar" className="field !pl-11" value={q} onChange={(e) => setQ(e.target.value)} />
@@ -78,7 +82,7 @@ export default function Diario() {
       {lista.length === 0 ? (
         <EmptyState icone={<NotebookPen size={34} strokeWidth={1.3} />} titulo={db.diario.length ? 'Nada encontrado' : 'Seu diário está em branco'}
           texto={db.diario.length ? 'Tente outra palavra ou filtro.' : 'Comece com uma palavra, uma oração ou um fechamento do dia.'}
-          acao={!db.diario.length && <button className="btn-primary" onClick={abrirNovo}><Plus size={18} /> Novo registro</button>} />
+          acao={!db.diario.length && completo && <button className="btn-primary" onClick={abrirNovo}><Plus size={18} /> Novo registro</button>} />
       ) : (
         <ul className="space-y-2.5">
           {lista.map((e) => (
@@ -96,7 +100,7 @@ export default function Diario() {
         </ul>
       )}
 
-      {db.diario.length > 0 && (
+      {db.diario.length > 0 && completo && (
         <button className="btn-primary fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] left-1/2 z-30 -translate-x-1/2" onClick={abrirNovo}><Plus size={18} /> Novo registro</button>
       )}
 

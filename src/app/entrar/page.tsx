@@ -1,4 +1,5 @@
 'use client';
+import { caminhoSeguro } from '@/lib/assinatura/planos';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -35,7 +36,12 @@ export default function Entrar() {
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string }>();
   const [carregando, setCarregando] = useState(false);
 
-  useEffect(() => { if (session) router.replace('/'); }, [session, router]);
+  useEffect(() => {
+    if (!session) return;
+    let destino = '/';
+    try { destino = caminhoSeguro(sessionStorage.getItem('sentinelas:apos-entrar'), '/'); sessionStorage.removeItem('sentinelas:apos-entrar'); } catch { /* noop */ }
+    router.replace(destino);
+  }, [session, router]);
 
   // Volta do link de e-mail: mostra o resultado em vez de um erro técnico
   useEffect(() => {

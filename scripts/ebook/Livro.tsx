@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from 'react';
-import { CAPITULOS, LIVRO, type Capitulo, type Secao } from '@/lib/content/ebook';
+import { CAPITULOS, LIVRO } from '@/lib/conteudo-pago/biblioteca';
+import type { Capitulo, Secao } from '@/lib/content/ebook';
 import { SeasonArt } from '@/components/seasons/SeasonArt';
 import { TowerMark } from '@/components/brand/Watchtower';
 import { CapaArte } from './Capa';

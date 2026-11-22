@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Store, StorageAdapter } from '@/lib/store/store';
 import { emptyDB } from '@/lib/store/schema';
-import { applyOp, diff, opKey, pullAll, vazio, type Op } from './remote';
+import { applyOp, diff, opKey, pullAll, vazio, SemPermissao, type Op } from './remote';
 
 export type SyncStatus = 'sincronizado' | 'pendente' | 'sincronizando' | 'offline' | 'erro';
 
@@ -18,6 +18,8 @@ export class SyncEngine {
   private ouvintes = new Set<(s: SyncStatus) => void>();
   private soltar: (() => void) | null = null;
   private ultimoErro = '';
+  /** operações recusadas por falta de permissão: guardadas no aparelho, sem travar a fila */
+  private retidas: Op[] = [];
 
   constructor(
     private sb: SupabaseClient,
@@ -27,7 +29,14 @@ export class SyncEngine {
     private online: () => boolean = () => (typeof navigator === 'undefined' ? true : navigator.onLine),
   ) {
     try { this.fila = JSON.parse(disco.read() ?? '[]'); } catch { this.fila = []; }
+    try { this.retidas = JSON.parse(this.lerRetidas() ?? '[]'); } catch { this.retidas = []; }
   }
+
+  private chaveRetidas() { return `sentinelas:retidas:${this.uid}`; }
+  private lerRetidas() { try { return localStorage.getItem(this.chaveRetidas()); } catch { return null; } }
+  private salvarRetidas() { try { this.retidas.length ? localStorage.setItem(this.chaveRetidas(), JSON.stringify(this.retidas)) : localStorage.removeItem(this.chaveRetidas()); } catch { /* noop */ } }
+  /** registros que o servidor recusou (ficam no aparelho; voltam a ser enviados quando houver acesso) */
+  get naoEnviadas() { return this.retidas.length; }
 
   onStatus(l: (s: SyncStatus) => void) { this.ouvintes.add(l); l(this.status); return () => { this.ouvintes.delete(l); }; }
   get erro() { return this.ultimoErro; }
@@ -52,6 +61,8 @@ export class SyncEngine {
     this.set('sincronizando');
     // envia o que ficou pendente de outra sessão antes de buscar
     this.soltar = this.store.onChange((a, b) => this.enfileirar(diff(a, b)));
+    // tenta de novo o que foi recusado antes (o acesso pode ter voltado)
+    if (this.retidas.length) { const r = this.retidas; this.retidas = []; this.salvarRetidas(); this.fila = [...r, ...this.fila]; this.salvarFila(); }
     if (typeof window !== 'undefined') window.addEventListener('online', this.aoVoltar);
     await this.flush();
     try {
@@ -89,7 +100,12 @@ export class SyncEngine {
     this.set('sincronizando');
     try {
       while (this.fila.length) {
-        await applyOp(this.sb, this.uid, this.fila[0]);
+        try { await applyOp(this.sb, this.uid, this.fila[0]); }
+        catch (e) {
+          if (!(e instanceof SemPermissao)) throw e;
+          this.retidas = [...this.retidas.filter((x) => opKey(x) !== opKey(this.fila[0])), this.fila[0]];
+          this.salvarRetidas();
+        }
         this.fila.shift();
         this.salvarFila();
       }

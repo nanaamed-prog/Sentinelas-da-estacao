@@ -11,11 +11,13 @@ import { ConfirmationDialog } from '@/components/ui/Sheet';
 import { dataCurta } from '@/lib/utils/format';
 import { PortalPrayer } from './PortalPrayer';
 import { OracaoBatalha } from './OracaoBatalha';
+import { AvisoCompleto, useCompleto } from '@/components/assinatura/RecursoCompleto';
 
 export function PrayerSession({ portalId }: { portalId: PortalId }) {
   const portal = getPortal(portalId)!;
   const db = useDB();
   const store = useStore();
+  const completo = useCompleto();
   const sessao = db.vigilias.find((v) => !v.fim);
   const nesta = sessao?.portal === portalId ? sessao : undefined;
   const outra = sessao && !nesta ? getPortal(sessao.portal) : undefined;
@@ -93,7 +95,7 @@ export function PrayerSession({ portalId }: { portalId: PortalId }) {
         </div>
       </section>
 
-      {abertos.length > 0 && (
+      {abertos.length > 0 && completo && (
         <section>
           <h2 className="font-display text-lg">Orações deste portal pelos seus pedidos</h2>
           <p className="mt-1 text-[13px] text-muted">Cada oração segue a intenção do portal ({portal.proposito.toLowerCase()}) com foco em batalha espiritual: resistir ao mal, pedir a proteção de Deus e assumir as próprias atitudes. Escolha o tema, por quem interceder e o formato.</p>
@@ -146,9 +148,11 @@ export function PrayerSession({ portalId }: { portalId: PortalId }) {
       ) : (
         <section className="space-y-3">
           {outra && <p className="rounded-xl bg-surface-2 px-4 py-3 text-[13px]">Você tem uma vigília em andamento no <Link className="underline" href={`/vigilias/${sessao!.portal}/`}>{nomePortal(outra)}</Link>. Conclua-a antes de iniciar outra.</p>}
-          <button className="btn-primary w-full" disabled={!!outra} onClick={() => { store.iniciarVigilia(portalId); setTexto(''); }}>
-            <Flame size={18} /> Iniciar vigília
-          </button>
+          {completo ? (
+            <button className="btn-primary w-full" disabled={!!outra} onClick={() => { store.iniciarVigilia(portalId); setTexto(''); }}>
+              <Flame size={18} /> Iniciar vigília
+            </button>
+          ) : <AvisoCompleto recurso="vigilias" compacto />}
         </section>
       )}
 

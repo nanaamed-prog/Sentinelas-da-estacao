@@ -36,6 +36,11 @@ export async function POST(req: Request) {
   if (eu || !u.user) return json({ erro: 'Sessão expirada. Entre novamente.' }, 401);
   const uid = u.user.id;
 
+  // plano completo (decidido no banco, nunca pelo navegador)
+  const { data: ac, error: ea } = await sb.rpc('acesso_completo');
+  if (ea && !/PGRST202|42883/.test(`${ea.code}`)) return json({ erro: 'Não foi possível verificar o acesso agora.' }, 503);
+  if (!ea && ac === false) return json({ erro: 'A IA avançada faz parte do Sentinelas Completo.', recurso: 'ia' }, 403);
+
   let dados: z.infer<typeof corpo>;
   try { dados = corpo.parse(await req.json()); } catch { return json({ erro: 'Mensagem inválida.' }, 400); }
 

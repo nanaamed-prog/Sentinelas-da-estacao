@@ -1,7 +1,9 @@
-import livro from './ebook.json';
 import type { SeasonId } from './seasons';
 
-/** Conteúdo autoral do e-book “Sentinelas da Estação” (Naiara de Medeiros), estruturado para o leitor do app. */
+/**
+ * Tipos do e-book “Sentinelas da Estação” (Naiara de Medeiros).
+ * O texto fica no servidor (src/lib/conteudo-pago) e chega ao app por /api/conteudo/biblioteca.
+ */
 export interface Secao {
   titulo: string;
   subtitulo: string;
@@ -13,9 +15,7 @@ export interface Secao {
   campos?: string[];
 }
 export interface Capitulo { slug: string; numero: number | null; titulo: string; epigrafe: string; estacao?: SeasonId; secoes: Secao[] }
+export interface Livro { titulo: string; subtitulo: string; autora: string; edicao: string; capitulos: Capitulo[] }
 
-export const LIVRO = livro as { titulo: string; subtitulo: string; autora: string; edicao: string; capitulos: Capitulo[] };
-export const CAPITULOS = LIVRO.capitulos;
-export const getCapitulo = (slug: string) => CAPITULOS.find((c) => c.slug === slug);
-export const capituloDaEstacao = (id: SeasonId) => CAPITULOS.find((c) => c.estacao === id);
-export const oracaoDaEstacao = (id: SeasonId) => capituloDaEstacao(id)?.secoes.find((s) => s.titulo.startsWith('Oração d'));
+/** O que o app recebe do servidor: os capítulos liberados para a usuária. */
+export interface Biblioteca { livro: Omit<Livro, 'capitulos'>; capitulos: Capitulo[]; completo: boolean }

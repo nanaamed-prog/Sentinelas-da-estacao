@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 /** Converte rotas do app (/vigilias/colheita/) em hash simples (#vigilias-colheita) e vice-versa. */
 export const toHash = (href: string) => {
-  const [p, frag] = href.split('#');
+  const [semQ, q] = href.split('?');
+  const [p, frag] = semQ.split('#');
   const slug = p.replace(/^\/|\/$/g, '').replace(/\//g, '-');
-  return '#' + (slug || 'inicio') + (frag ? '-' + frag : '');
+  return '#' + (slug || 'inicio') + (frag ? '-' + frag : '') + (q ? '?' + q : '');
 };
 export const fromHash = (h: string) => {
-  const s = h.replace(/^#/, '');
+  const s = h.replace(/^#/, '').split('?')[0];
   if (!s || s === 'inicio') return '/';
   const [a, ...b] = s.split('-');
   if (a === 'boas') return '/boas-vindas/';

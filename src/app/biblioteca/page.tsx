@@ -1,7 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, ChevronRight } from 'lucide-react';
+import { BookOpen, ChevronRight, KeyRound } from 'lucide-react';
+import { useAssinatura } from '@/lib/assinatura/cliente';
+import { CAPITULOS_GRATUITOS } from '@/lib/assinatura/planos';
 import { PageHeader } from '@/components/ui/states';
 import { SeasonArt } from '@/components/seasons/SeasonArt';
 import INDICE from '@/lib/content/ebook-indice.json';
@@ -16,6 +18,7 @@ export default function Biblioteca() {
   const [ultima, setUltima] = useState<string | null>(null);
   useEffect(() => { try { setUltima(localStorage.getItem(K_ULTIMA)); } catch { /* noop */ } }, []);
   const cont = ultima ? getCapitulo(ultima) : undefined;
+  const { completo } = useAssinatura();
 
   return (
     <>
@@ -37,7 +40,8 @@ export default function Biblioteca() {
               <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-full border border-line/40 font-display text-accent">{c.numero ? String(c.numero).padStart(2, '0') : '·'}</span>
               <span className="relative flex-1">
                 <span className="block font-serif text-[16px] leading-snug">{c.titulo}</span>
-                <span className="block text-[12px] text-muted">{c.epigrafe} · {c.partes} {c.partes === 1 ? 'parte' : 'partes'}</span>
+                <span className="block text-[12px] text-muted">{c.epigrafe} · {c.partes} {c.partes === 1 ? 'parte' : 'partes'}
+                  {!completo && !CAPITULOS_GRATUITOS.includes(c.slug) && <span className="ml-1.5 inline-flex items-center gap-1 align-middle"><KeyRound size={11} aria-hidden /> Completo</span>}</span>
               </span>
               <ChevronRight size={18} className="relative text-muted" />
             </Link>

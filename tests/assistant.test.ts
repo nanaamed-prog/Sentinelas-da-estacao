@@ -2,11 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { Store, memoryStorage } from '@/lib/store/store';
 import { montarPlano, ondeAparece, organizarPedidos, perguntasDeReflexao, AVISO } from '@/lib/assistant/local';
 import { SISTEMA } from '@/lib/assistant/sistema';
+import { CAPITULOS } from '@/lib/conteudo-pago/biblioteca';
 import { tipoBase, validar } from '@/lib/attachments/anexos';
 
 describe('Assistente — modo local', () => {
   it('traz perguntas da estação e do portal, vindas do e-book', () => {
-    const g = perguntasDeReflexao('outono', 'silencio');
+    const g = perguntasDeReflexao('outono', 'silencio', CAPITULOS);
     expect(g.map((x) => x.origem)).toEqual(['Outono — Deixe Deus Podar', 'Portal do Silêncio']);
     expect(g[0].perguntas.length).toBeGreaterThan(1);
     g.flatMap((x) => x.perguntas).forEach((q) => expect(q.endsWith('?')).toBe(true));
@@ -27,16 +28,16 @@ describe('Assistente — modo local', () => {
     const s = new Store(memoryStorage());
     s.setPreferences({ portaisAtivos: ['alvorada', 'silencio'] });
     s.escolherEstacao('inverno');
-    const p = montarPlano(s.getSnapshot());
+    const p = montarPlano(s.getSnapshot(), CAPITULOS);
     expect(p.passos[0]).toContain('Alvorada (06:00)');
     expect(p.passos[1]).toContain('Inverno');
     expect(p.passos.join(' ')).toContain('Dia 1');
   });
 
   it('encontra onde uma referência aparece no e-book', () => {
-    expect(ondeAparece('Salmo 46').map((x) => x.slug)).toEqual(expect.arrayContaining(['inverno', 'as-oito-vigilias']));
-    expect(ondeAparece('Tiago 1:5').length).toBeGreaterThan(0);
-    expect(ondeAparece('xx')).toEqual([]);
+    expect(ondeAparece('Salmo 46', CAPITULOS).map((x) => x.slug)).toEqual(expect.arrayContaining(['inverno', 'as-oito-vigilias']));
+    expect(ondeAparece('Tiago 1:5', CAPITULOS).length).toBeGreaterThan(0);
+    expect(ondeAparece('xx', CAPITULOS)).toEqual([]);
   });
 
   it('as regras de segurança estão nas instruções da IA', () => {

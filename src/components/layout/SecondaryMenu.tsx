@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { Shield, BellRing, Route, Library, Sparkles, Calendar, Star, Settings, User, ChevronRight } from 'lucide-react';
+import { Shield, KeyRound, BellRing, Route, Library, Sparkles, Calendar, Star, Settings, User, ChevronRight } from 'lucide-react';
 import { Sheet } from '@/components/ui/Sheet';
 
 const ITENS = [
@@ -11,6 +11,7 @@ const ITENS = [
   { label: 'Calendário', Icon: Calendar, href: '/calendario/' },
   { label: 'Testemunhos', Icon: Star, href: '/testemunhos/' },
   { label: 'Lembretes', Icon: BellRing, href: '/lembretes/' },
+  { label: 'Planos e assinatura', Icon: KeyRound, href: '/assinatura/' },
   { label: 'Configurações', Icon: Settings, href: '/configuracoes/' },
   { label: 'Minha Conta', Icon: User, href: '/configuracoes/#conta' },
 ] as const;

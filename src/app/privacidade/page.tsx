@@ -40,6 +40,11 @@ export default function Privacidade() {
           expresso — que pode ser retirado a qualquer momento. Diário e testemunhos não são enviados. O histórico das conversas fica
           na sua conta e pode ser apagado por você. Seu conteúdo não é usado por este aplicativo para treinar modelos.</p>
 
+        <h2>Assinatura e pagamentos</h2>
+        <p>Se você assinar o Sentinelas Completo, o pagamento é feito no ambiente do provedor Stripe. O aplicativo não recebe nem guarda
+          dados do cartão; guarda apenas o plano, a situação da assinatura e as datas do período, para liberar os recursos. O Stripe recebe
+          o seu e-mail para emitir as cobranças. Cancelar ou encerrar a assinatura não apaga os seus registros.</p>
+
         <h2>Seus direitos</h2>
         <p>Você pode, a qualquer momento, dentro do aplicativo em Configurações: exportar todos os seus dados e excluir sua conta —
           a exclusão apaga definitivamente todos os registros vinculados a ela. Também pode solicitar acesso, correção ou informações

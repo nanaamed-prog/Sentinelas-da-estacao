@@ -55,8 +55,13 @@ export function diff(prev: DB, next: DB): Op[] {
   return ops;
 }
 
-const ok = <T>(r: { data: T; error: { message: string } | null }): T => {
-  if (r.error) throw new Error(r.error.message);
+/** Recusa do servidor por falta de permissão (ex.: criar registro sem o plano completo). */
+export class SemPermissao extends Error {}
+const ok = <T>(r: { data: T; error: { message: string; code?: string } | null }): T => {
+  if (r.error) {
+    if (r.error.code === '42501' || /row-level security/i.test(r.error.message)) throw new SemPermissao(r.error.message);
+    throw new Error(r.error.message);
+  }
   return r.data;
 };
 

@@ -1,14 +1,15 @@
 import { notFound } from 'next/navigation';
-import { CAPITULOS, getCapitulo } from '@/lib/content/ebook';
-import { DevotionalReader } from '@/components/library/DevotionalReader';
+import INDICE from '@/lib/content/ebook-indice.json';
+import { CapituloCliente } from '@/components/library/CapituloCliente';
 
-export function generateStaticParams() { return CAPITULOS.map((c) => ({ slug: c.slug })); }
+const CAPS = (INDICE as { capitulos: { slug: string; titulo: string }[] }).capitulos;
 
+export function generateStaticParams() { return CAPS.map((c) => ({ slug: c.slug })); }
+
+/** A página estática só tem o índice; o texto chega do servidor depois da verificação do acesso. */
 export default async function CapituloPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const cap = getCapitulo(slug);
-  if (!cap) notFound();
-  const i = CAPITULOS.indexOf(cap);
-  const viz = (c?: (typeof CAPITULOS)[number]) => (c ? { slug: c.slug, titulo: c.titulo } : null);
-  return <DevotionalReader cap={cap} ant={viz(CAPITULOS[i - 1])} prox={viz(CAPITULOS[i + 1])} />;
+  const i = CAPS.findIndex((c) => c.slug === slug);
+  if (i < 0) notFound();
+  return <CapituloCliente slug={slug} ant={CAPS[i - 1] ?? null} prox={CAPS[i + 1] ?? null} />;
 }

@@ -4,9 +4,11 @@ import clsx from 'clsx';
 import { Copy, Check, ChevronLeft, ChevronRight, Footprints, Info } from 'lucide-react';
 import type { PortalId } from '@/lib/content/portals';
 import {
-  ALVOS, ENCERRAMENTO, TEMAS, TEMA_DO_PORTAL, montarOracao,
-  type AlvoId, type Modalidade, type TemaId,
+  TEMA_DO_PORTAL, montarOracao,
+  type AlvoId, type DadosOracoes, type Modalidade, type TemaId,
 } from '@/lib/content/batalha';
+import { useConteudo } from '@/lib/assinatura/cliente';
+import { AvisoCompleto } from '@/components/assinatura/RecursoCompleto';
 
 const MODOS: { id: Modalidade; nome: string }[] = [
   { id: 'breve', nome: 'Breve' }, { id: 'completa', nome: 'Completa' }, { id: 'guiada', nome: 'Guiada' },
@@ -37,14 +39,27 @@ export interface OracaoBatalhaProps {
   acao?: (texto: string) => React.ReactNode;
 }
 
-/** Oração de batalha espiritual: tema × alvo da intercessão × modalidade, moldada pelo portal. */
-export function OracaoBatalha({ portal, pedido, temaInicial, alvoInicial, acao }: OracaoBatalhaProps) {
+/** Oração de batalha espiritual (plano completo): os textos vêm do servidor, após a verificação do acesso. */
+export function OracaoBatalha(props: OracaoBatalhaProps) {
+  const { dados, estado } = useConteudo<DadosOracoes & { completo?: boolean }>('oracoes');
+  if (estado === 'bloqueado') return <AvisoCompleto recurso="oracoes" />;
+  if (!dados) return (
+    <p className="rounded-xl bg-surface-2 px-4 py-3 text-[13px] text-muted" aria-live="polite">
+      {estado === 'indisponivel' ? 'Conecte-se à internet para carregar as orações. Depois elas ficam disponíveis também offline.' : 'Carregando as orações…'}
+    </p>
+  );
+  return <Oracoes {...props} dados={dados} />;
+}
+
+/** tema × alvo da intercessão × modalidade, moldada pelo portal */
+function Oracoes({ portal, pedido, temaInicial, alvoInicial, acao, dados }: OracaoBatalhaProps & { dados: DadosOracoes }) {
+  const { temas: TEMAS, alvos: ALVOS, encerramento: ENCERRAMENTO } = dados;
   const [tema, setTema] = useState<TemaId>(temaInicial ?? (portal ? TEMA_DO_PORTAL[portal] : 'armadura'));
   const [alvo, setAlvo] = useState<AlvoId>(alvoInicial ?? 'vida');
   const [modo, setModo] = useState<Modalidade>('completa');
   const [passo, setPasso] = useState(0);
   const [copiado, setCopiado] = useState(false);
-  const o = useMemo(() => montarOracao({ tema, alvo, modalidade: modo, portal, pedido }), [tema, alvo, modo, portal, pedido]);
+  const o = useMemo(() => montarOracao({ tema, alvo, modalidade: modo, portal, pedido }, dados), [tema, alvo, modo, portal, pedido, dados]);
   const total = o.etapas.length + 1; // + encerramento
   const copiar = async () => {
     try { await navigator.clipboard.writeText(`${o.texto}\n\n${ENCERRAMENTO.texto}`); setCopiado(true); setTimeout(() => setCopiado(false), 1800); } catch { /* sem permissão */ }

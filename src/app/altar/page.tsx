@@ -13,6 +13,7 @@ import { STATUS, type PrayerRequest, type Status } from '@/lib/store/schema';
 import { PORTALS, currentPortal, getPortal, nomePortal, type PortalId } from '@/lib/content/portals';
 import { PortalPrayer } from '@/components/portals/PortalPrayer';
 import Link from 'next/link';
+import { AvisoCompleto, useCompleto } from '@/components/assinatura/RecursoCompleto';
 import { dataCurta } from '@/lib/utils/format';
 
 const ABAS = [['abertos', 'Em oração'], ['respondidos', 'Respondidos'], ['todos', 'Todos']] as const;
@@ -22,6 +23,7 @@ export default function Altar() {
   const db = useDB();
   const store = useStore();
   const [aba, setAba] = useState<Aba>('abertos');
+  const completo = useCompleto();
   const [novo, setNovo] = useState(false);
   const [abertoId, setAbertoId] = useState<string>();
   const aberto = db.pedidos.find((p) => p.id === abertoId);
@@ -43,22 +45,23 @@ export default function Altar() {
         ))}
       </div>
 
+      {!completo && <div className="mb-4"><AvisoCompleto recurso="altar" compacto /></div>}
       {lista.length === 0 ? (
         <EmptyState icone={<HandHeart size={36} strokeWidth={1.3} />}
           titulo={aba === 'respondidos' ? 'Nenhum testemunho ainda' : 'Seu altar está vazio'}
           texto={aba === 'respondidos' ? 'Quando marcar um pedido como respondido, ele aparece aqui com seu testemunho.' : 'Registre o que está no seu coração. Seus pedidos são privados.'}
-          acao={aba !== 'respondidos' && <button className="btn-primary" onClick={() => setNovo(true)}><Plus size={18} /> Novo pedido</button>} />
+          acao={aba !== 'respondidos' && completo && <button className="btn-primary" onClick={() => setNovo(true)}><Plus size={18} /> Novo pedido</button>} />
       ) : (
         <ul className="space-y-2.5">{lista.map((p) => <li key={p.id}><PrayerRequestCard p={p} onOpen={() => setAbertoId(p.id)} /></li>)}</ul>
       )}
 
-      {lista.length > 0 && (
+      {lista.length > 0 && completo && (
         <button className="btn-primary fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] left-1/2 z-30 -translate-x-1/2" onClick={() => setNovo(true)}>
           <Plus size={18} /> Novo pedido de oração
         </button>
       )}
 
-      <Sheet open={novo} onClose={() => setNovo(false)} titulo="Novo pedido">
+      <Sheet open={novo && completo} onClose={() => setNovo(false)} titulo="Novo pedido">
         <PrayerRequestForm onSubmit={(d) => {
           store.criarPedido({ ...d, estacao: db.estacoes.find((e) => !e.fim)?.estacao });
           setNovo(false); setAba('abertos');

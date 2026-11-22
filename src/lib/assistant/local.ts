@@ -1,9 +1,9 @@
 /**
  * Assistente da Sentinela — modo local (sem IA, nada sai do aparelho).
- * Usa o conteúdo do e-book e os registros da própria usuária.
+ * Usa o conteúdo do e-book (recebido do servidor) e os registros da própria usuária.
  * Não fala em nome de Deus, não promete respostas e não interpreta sinais.
  */
-import { CAPITULOS, capituloDaEstacao } from '@/lib/content/ebook';
+import type { Capitulo } from '@/lib/content/ebook';
 import { PORTALS, formatHora, getPortal, nomePortal, type PortalId } from '@/lib/content/portals';
 import { getSeason, type SeasonId } from '@/lib/content/seasons';
 import { JORNADA } from '@/lib/content/journey';
@@ -13,9 +13,9 @@ export const AVISO =
   'Sou uma ajuda para organizar sua oração e reflexão. Não falo em nome de Deus, não faço profecias e não substituo aconselhamento pastoral, médico ou psicológico.';
 
 /** Perguntas de reflexão da estação (do e-book) + do portal escolhido. */
-export function perguntasDeReflexao(estacao?: SeasonId, portal?: PortalId): { origem: string; perguntas: string[] }[] {
+export function perguntasDeReflexao(estacao?: SeasonId, portal?: PortalId, capitulos: Capitulo[] = []): { origem: string; perguntas: string[] }[] {
   const grupos: { origem: string; perguntas: string[] }[] = [];
-  const cap = estacao ? capituloDaEstacao(estacao) : CAPITULOS.find((c) => c.slug === 'discernindo-sua-estacao');
+  const cap = estacao ? capitulos.find((c) => c.estacao === estacao) : capitulos.find((c) => c.slug === 'discernindo-sua-estacao');
   if (cap) {
     const qs = cap.secoes.flatMap((s) => (s.campos?.filter((c) => c.endsWith('?')) ?? []).concat(s.reflexao.includes('?') ? s.reflexao.split(/(?<=\?)\s+/).filter((x) => x.endsWith('?')) : []));
     if (qs.length) grupos.push({ origem: cap.titulo, perguntas: [...new Set(qs)].slice(0, 6) });
@@ -42,9 +42,9 @@ export function organizarPedidos(pedidos: PrayerRequest[], agora = new Date()) {
 }
 
 /** Plano devocional simples para os próximos dias, a partir da estação, dos portais e da jornada. */
-export function montarPlano(db: DB) {
+export function montarPlano(db: DB, capitulos: Capitulo[] = []) {
   const est = db.estacoes.find((e) => !e.fim)?.estacao;
-  const cap = est ? capituloDaEstacao(est) : undefined;
+  const cap = est ? capitulos.find((c) => c.estacao === est) : undefined;
   const portais = PORTALS.filter((p) => db.preferencias.portaisAtivos.includes(p.id));
   const leituras = [...new Set(cap?.secoes.flatMap((s) => s.leituras) ?? ['Salmo 119:105', 'Eclesiastes 3:1-8'])];
   const jornada = [...db.jornada].sort((a, b) => b.ciclo - a.ciclo)[0];
@@ -62,11 +62,11 @@ export function montarPlano(db: DB) {
 }
 
 /** Onde uma referência bíblica aparece no e-book (o app não reproduz o texto bíblico). */
-export function ondeAparece(ref: string): { capitulo: string; slug: string; secao: string }[] {
+export function ondeAparece(ref: string, capitulos: Capitulo[] = []): { capitulo: string; slug: string; secao: string }[] {
   const alvo = ref.trim().toLowerCase().replace(/^salmos\b/, 'salmo').replace(/\s+/g, ' ');
   if (alvo.length < 3) return [];
   const out: { capitulo: string; slug: string; secao: string }[] = [];
-  for (const c of CAPITULOS) for (const s of c.secoes) {
+  for (const c of capitulos) for (const s of c.secoes) {
     const norm = (x: string) => x.toLowerCase().replace(/^salmos\b/, 'salmo').replace(/\s+/g, ' ');
     if (s.leituras.some((l) => { const n = norm(l); return n === alvo || n.startsWith(alvo + ':') || n.startsWith(alvo + '-') || (alvo.includes(':') && n.startsWith(alvo)); })) {
       out.push({ capitulo: c.titulo, slug: c.slug, secao: s.titulo });

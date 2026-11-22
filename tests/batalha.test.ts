@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { PORTALS } from '@/lib/content/portals';
-import { ALVOS, ENCERRAMENTO, TEMAS, TEMA_DO_PORTAL, ALVO_DA_CATEGORIA, montarOracao } from '@/lib/content/batalha';
+import { TEMA_DO_PORTAL, ALVO_DA_CATEGORIA, montarOracao as montar, type OpcoesOracao } from '@/lib/content/batalha';
+import { ALVOS, ENCERRAMENTO, TEMAS, DADOS_ORACOES } from '@/lib/conteudo-pago/oracoes';
+const montarOracao = (o: OpcoesOracao) => montar(o, DADOS_ORACOES);
 import { CATEGORIAS } from '@/lib/store/schema';
 import { SABOR_PORTAL } from '@/lib/content/prayers';
 

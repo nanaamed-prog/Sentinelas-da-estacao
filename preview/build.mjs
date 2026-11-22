@@ -13,7 +13,7 @@ execSync(`npx tailwindcss -c tailwind.config.ts -i preview/dist/in.css -o previe
 const res = await build({
   entryPoints: [r('preview/entry.tsx')], bundle: true, minify: true, write: false, format: 'iife', target: 'es2020',
   jsx: 'automatic', define: { 'process.env.NODE_ENV': '"production"', 'process.env.NEXT_PUBLIC_SUPABASE_URL': 'undefined', 'process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY': 'undefined' },
-  alias: { 'next/link': r('preview/shims/link.tsx'), 'next/navigation': r('preview/shims/navigation.ts'), '@': r('src') },
+  alias: { '@/lib/assinatura/buscar': r('preview/shims/buscar.ts'), 'next/link': r('preview/shims/link.tsx'), 'next/navigation': r('preview/shims/navigation.ts'), '@': r('src') },
   loader: { '.css': 'empty' },
 });
 const js = res.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');

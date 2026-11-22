@@ -35,15 +35,15 @@ export function Sheet({ open, onClose, titulo, children }: { open: boolean; onCl
   );
 }
 
-export function ConfirmationDialog({ open, titulo, texto, confirmar = 'Confirmar', perigo, onConfirm, onClose }: {
-  open: boolean; titulo: string; texto: string; confirmar?: string; perigo?: boolean; onConfirm: () => void; onClose: () => void;
+export function ConfirmationDialog({ open, titulo, texto, confirmar = 'Confirmar', voltar = 'Cancelar', perigo, onConfirm, onClose }: {
+  open: boolean; titulo: string; texto: string; confirmar?: string; voltar?: string; perigo?: boolean; onConfirm: () => void; onClose: () => void;
 }) {
   return (
     <Sheet open={open} onClose={onClose} titulo={titulo}>
       <p className="font-serif text-[15px] text-muted">{texto}</p>
       <div className="mt-6 flex flex-col gap-3">
         <button className={perigo ? 'btn bg-vinho text-marfim hover:bg-vinho-600' : 'btn-primary'} onClick={() => { onConfirm(); onClose(); }}>{confirmar}</button>
-        <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+        <button className="btn-ghost" onClick={onClose}>{voltar}</button>
       </div>
     </Sheet>
   );

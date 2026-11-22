@@ -103,6 +103,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async sincronizarAgora() { await engine.current?.flush(); },
     async excluirConta() {
       if (!sb) return;
+      // assinatura renovando: o provedor continuaria cobrando — pedir o cancelamento antes de apagar qualquer coisa
+      const { data: renovando } = await sb.from('assinaturas').select('id').eq('provedor', 'stripe')
+        .in('status', ['pendente', 'ativa', 'em_atraso']).eq('cancelar_no_fim', false).limit(1);
+      if (renovando?.length) throw new Error('assinatura_renovando');
       if (session?.user.id) await removerTudo(sb, session.user.id).catch(() => undefined);
       const { error } = await sb.rpc('excluir_minha_conta');
       if (error) throw new Error(error.message);
