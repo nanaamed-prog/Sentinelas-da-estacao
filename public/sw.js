@@ -2,10 +2,10 @@
  * Estratégia: cache apenas de arquivos estáticos e páginas (conteúdo NÃO sensível).
  * Dados pessoais ficam no aparelho (Fase 1) ou no Supabase (Fase 2) e nunca entram no cache.
  */
-const VERSAO = 'sentinelas-v3';
+const VERSAO = 'sentinelas-v4';
 // telas guardadas na instalação, para abrir sem internet (só a estrutura; nenhum dado pessoal)
 const ESSENCIAIS = ['/', '/entrar/', '/boas-vindas/', '/vigilias/', '/estacoes/', '/altar/', '/diario/', '/jornada/', '/calendario/',
-  '/biblioteca/', '/testemunhos/', '/lembretes/', '/assistente/', '/configuracoes/', '/privacidade/',
+  '/biblioteca/', '/testemunhos/', '/lembretes/', '/assistente/', '/oracao/', '/configuracoes/', '/privacidade/',
   '/manifest.webmanifest', '/icons/icon-192.png'];
 
 self.addEventListener('install', (e) => {

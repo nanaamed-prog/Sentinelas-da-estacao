@@ -10,7 +10,7 @@ import { Pendente } from '@/components/ui/states';
 import { ConfirmationDialog } from '@/components/ui/Sheet';
 import { dataCurta } from '@/lib/utils/format';
 import { PortalPrayer } from './PortalPrayer';
-import { oracaoDoPortal } from '@/lib/content/prayers';
+import { OracaoBatalha } from './OracaoBatalha';
 
 export function PrayerSession({ portalId }: { portalId: PortalId }) {
   const portal = getPortal(portalId)!;
@@ -32,14 +32,20 @@ export function PrayerSession({ portalId }: { portalId: PortalId }) {
     return () => clearTimeout(t);
   }, [texto, nesta, store]);
 
-  function usarOracao(id: string) {
+  function usarOracao(id: string, t: string) {
     const p = abertos.find((x) => x.id === id);
     if (!p) return;
-    const t = oracaoDoPortal(portalId, { pedido: p.titulo, pessoa: p.pessoaOuAssunto });
     const s = nesta ?? store.iniciarVigilia(portalId);
     const novo = (s.oracaoPessoal || texto) ? `${texto.trim()}\n\n${t}` : t;
     setTexto(novo);
     store.atualizarVigilia(s.id, { oracaoPessoal: novo, pedidos: [...new Set([...s.pedidos, id])] });
+  }
+
+  function usarTexto(t: string) {
+    const s = nesta ?? store.iniciarVigilia(portalId);
+    const novo = (s.oracaoPessoal || texto) ? `${texto.trim()}\n\n${t}` : t;
+    setTexto(novo);
+    store.atualizarVigilia(s.id, { oracaoPessoal: novo });
   }
 
   const togglePedido = (id: string) => {
@@ -72,11 +78,25 @@ export function PrayerSession({ portalId }: { portalId: PortalId }) {
         <Link href="/biblioteca/as-oito-vigilias/" className="mt-4 inline-block font-sans text-[13px] text-[#8C5C22] underline underline-offset-4">Ler “Os Oito Portais” na Biblioteca</Link>
       </section>
 
+      <section>
+        <h2 className="font-display text-lg">Oração de batalha espiritual</h2>
+        <p className="mt-1 text-[13px] text-muted">
+          Firmeza contra o mal, confiança em Deus e responsabilidade pelas próprias atitudes. O horário é uma oportunidade de oração — não tem poder próprio.
+          {portal.hora < 6 && ' Não é preciso acordar de madrugada: você pode orar este portal em qualquer momento do dia.'}
+        </p>
+        <div className="mt-3">
+          <OracaoBatalha portal={portalId} acao={(t) =>
+            <button type="button" disabled={!!outra} onClick={() => usarTexto(t)}
+              className="min-h-10 rounded-full bg-ouro px-4 text-[13px] font-medium text-noite disabled:opacity-50">
+              {nesta ? 'Usar na minha oração' : 'Orar agora'}
+            </button>} />
+        </div>
+      </section>
 
       {abertos.length > 0 && (
         <section>
           <h2 className="font-display text-lg">Orações deste portal pelos seus pedidos</h2>
-          <p className="mt-1 text-[13px] text-muted">Cada oração segue a intenção do portal: {portal.proposito.toLowerCase()}.</p>
+          <p className="mt-1 text-[13px] text-muted">Cada oração segue a intenção do portal ({portal.proposito.toLowerCase()}) com foco em batalha espiritual: resistir ao mal, pedir a proteção de Deus e assumir as próprias atitudes. Escolha o tema, por quem interceder e o formato.</p>
           <ul className="mt-3 space-y-2">
             {abertos.map((p, i) => (
               <li key={p.id}>
@@ -86,8 +106,8 @@ export function PrayerSession({ portalId }: { portalId: PortalId }) {
                     <span className="text-[12px] text-accent group-open:hidden">Ver oração</span>
                   </summary>
                   <div className="mt-3">
-                    <PortalPrayer portal={portalId} pedido={p} acao={
-                      <button type="button" disabled={!!outra} onClick={() => usarOracao(p.id)}
+                    <PortalPrayer portal={portalId} pedido={p} acao={(t) =>
+                      <button type="button" disabled={!!outra} onClick={() => usarOracao(p.id, t)}
                         className="min-h-10 rounded-full bg-ouro px-4 text-[13px] font-medium text-noite disabled:opacity-50">
                         {nesta ? 'Usar na minha oração' : 'Orar agora'}
                       </button>} />

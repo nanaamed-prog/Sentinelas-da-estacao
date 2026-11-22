@@ -54,3 +54,17 @@ describe('orações por portal', () => {
     expect(oracaoDoPortal('silencio', { pedido: 'Saúde', pessoa: '  ' })).not.toContain(' por  ');
   });
 });
+
+import { estacaoDoCalendario } from '@/lib/content/seasons';
+describe('estação do calendário', () => {
+  const em = (d: number, m: number) => estacaoDoCalendario(new Date(2026, m - 1, d)).id;
+  it('não há sobreposição em 21/12 nem nas outras transições', () => {
+    expect(em(20, 12)).toBe('outono');
+    expect(em(21, 12)).toBe('inverno');
+    expect(em(1, 1)).toBe('inverno');
+    expect(em(20, 3)).toBe('inverno');
+    expect(em(21, 3)).toBe('primavera');
+    expect(em(20, 9)).toBe('verao');
+    expect(em(21, 9)).toBe('outono');
+  });
+});

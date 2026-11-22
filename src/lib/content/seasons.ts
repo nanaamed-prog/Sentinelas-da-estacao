@@ -31,3 +31,17 @@ export const SEASONS: Season[] = [
 export const getSeason = (id?: SeasonId | null) => SEASONS.find((s) => s.id === id);
 
 export const periodoTexto = (s: Season) => `${s.periodo.inicio} a ${s.periodo.fim}`;
+
+const mmdd = (ddmm: string) => { const [d, m] = ddmm.split('/').map(Number); return m * 100 + d; };
+
+/**
+ * Estação do calendário espiritual do método para uma data (somente informativo — a usuária escolhe a sua estação).
+ * Os períodos não se sobrepõem: 20/12 ainda é outono, 21/12 já é inverno.
+ */
+export function estacaoDoCalendario(data: Date): Season {
+  const v = (data.getMonth() + 1) * 100 + data.getDate();
+  return SEASONS.find((s) => {
+    const i = mmdd(s.periodo.inicio), f = mmdd(s.periodo.fim);
+    return i <= f ? v >= i && v <= f : v >= i || v <= f;
+  })!;
+}

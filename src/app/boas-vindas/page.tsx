@@ -77,7 +77,7 @@ export default function Onboarding() {
 
         {passo === 3 && (
           <Bloco eyebrow="Meus horários" titulo="Escolha seus portais de oração">
-            <p className="text-[15px]">Comece com um, três ou até os oito. Os horários organizam sua rotina; eles não têm poder em si mesmos.</p>
+            <p className="text-[15px]">Comece com um, três ou até os oito. Os horários organizam sua rotina; eles não têm poder em si mesmos. Os portais da madrugada (00h e 03h) são opcionais — não é preciso acordar à noite para orar.</p>
             <div className="mt-3 flex gap-2">
               {[['1 portal', ['alvorada']], ['3 portais', ['alvorada', 'santidade', 'silencio']], ['Todos os 8', PORTALS.map((p) => p.id)]].map(([l, ids]) => (
                 <button key={l as string} onClick={() => setPortais(ids as PortalId[])} className="min-h-10 rounded-full border border-line/40 px-3 text-[13px] hover:bg-surface-2">{l as string}</button>

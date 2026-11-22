@@ -17,6 +17,7 @@ export default function Vigilias() {
     <>
       <PageHeader eyebrow="Os oito portais" titulo="Vigílias">Oito horários. Um propósito.</PageHeader>
       <Link href="/lembretes/" className="-mt-3 mb-4 inline-flex min-h-10 items-center gap-1.5 rounded-full border border-line/30 px-4 text-[13px] text-accent"><BellRing size={14} /> Lembretes e horários</Link>
+      <p className="-mt-1 mb-4 text-[13px] text-muted">Os horários são oportunidades de oração, sem poder próprio. Os portais da madrugada são opcionais e podem ser orados em outro momento. <Link href="/oracao/" className="text-accent underline underline-offset-4">Oração de batalha</Link></p>
       <ul className="space-y-2.5">
         {PORTALS.map((p) => <li key={p.id}><PortalCard portal={p} atual={p.id === atual.id} ativo={db.preferencias.portaisAtivos.includes(p.id)} /></li>)}
       </ul>

@@ -1,10 +1,11 @@
 'use client';
 import Link from 'next/link';
-import { BellRing, Route, Library, Sparkles, Calendar, Star, Settings, User, ChevronRight } from 'lucide-react';
+import { Shield, BellRing, Route, Library, Sparkles, Calendar, Star, Settings, User, ChevronRight } from 'lucide-react';
 import { Sheet } from '@/components/ui/Sheet';
 
 const ITENS = [
   { label: 'Minha Jornada', Icon: Route, href: '/jornada/' },
+  { label: 'Oração de batalha', Icon: Shield, href: '/oracao/' },
   { label: 'Biblioteca', Icon: Library, href: '/biblioteca/' },
   { label: 'Assistente de Oração', Icon: Sparkles, href: '/assistente/' },
   { label: 'Calendário', Icon: Calendar, href: '/calendario/' },

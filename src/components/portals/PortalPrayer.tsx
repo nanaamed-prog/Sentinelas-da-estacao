@@ -1,33 +1,22 @@
 'use client';
-import { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
 import type { PortalId } from '@/lib/content/portals';
-import { etapasDaOracao, oracaoDoPortal } from '@/lib/content/prayers';
+import { ALVO_DA_CATEGORIA } from '@/lib/content/batalha';
 import type { PrayerRequest } from '@/lib/store/schema';
+import { OracaoBatalha } from './OracaoBatalha';
 
-/** Oração orientada de um portal para um pedido específico. */
-export function PortalPrayer({ portal, pedido, acao }: { portal: PortalId; pedido: Pick<PrayerRequest, 'titulo' | 'pessoaOuAssunto'>; acao?: React.ReactNode }) {
-  const alvo = { pedido: pedido.titulo, pessoa: pedido.pessoaOuAssunto };
-  const etapas = etapasDaOracao(portal, alvo);
-  const texto = oracaoDoPortal(portal, alvo);
-  const [copiado, setCopiado] = useState(false);
+/** Oração de um portal para um pedido específico — com foco em batalha espiritual. */
+export function PortalPrayer({ portal, pedido, acao }: {
+  portal: PortalId;
+  pedido: Pick<PrayerRequest, 'titulo' | 'pessoaOuAssunto'> & { categoria?: PrayerRequest['categoria'] };
+  acao?: React.ReactNode | ((texto: string) => React.ReactNode);
+}) {
   return (
-    <div>
-      <ol className="leitura space-y-4 rounded-xl px-4 py-4">
-        {etapas.map((e, i) => (
-          <li key={e.id}>
-            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8C5C22]">{i + 1}. {e.titulo}</p>
-            <p className="mt-1 text-[16px] italic">{e.texto}</p>
-          </li>
-        ))}
-      </ol>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {acao}
-        <button type="button" className="inline-flex min-h-10 items-center gap-1.5 rounded-full border border-line/30 px-3 text-[13px]"
-          onClick={async () => { try { await navigator.clipboard.writeText(texto); setCopiado(true); setTimeout(() => setCopiado(false), 1800); } catch { /* sem permissão */ } }}>
-          {copiado ? <Check size={14} /> : <Copy size={14} />} {copiado ? 'Copiada' : 'Copiar'}
-        </button>
-      </div>
-    </div>
+    <OracaoBatalha
+      key={`${portal}-${pedido.titulo}`}
+      portal={portal}
+      pedido={{ titulo: pedido.titulo, pessoa: pedido.pessoaOuAssunto }}
+      alvoInicial={pedido.categoria ? ALVO_DA_CATEGORIA[pedido.categoria] ?? 'vida' : 'vida'}
+      acao={typeof acao === 'function' ? acao : () => acao}
+    />
   );
 }

@@ -54,7 +54,7 @@ const MODELOS: Record<PortalId, Modelo> = {
   },
   guerra: {
     entrada: `${ENTRADA_BASE} Nesta vigília da madrugada, eu me coloco na brecha diante de Ti.`,
-    perdao: `Confesso os meus pecados e as brechas que eu mesma abri por descuido, mágoa ou desobediência. Perdoa-me. Também libero o perdão a quem me feriu, para que nada impeça a minha oração. ${PERDAO_FIM}`,
+    perdao: `Confesso os meus pecados e as falhas que cometi por descuido, mágoa ou desobediência. Perdoa-me. Também libero o perdão a quem me feriu, para que nada impeça a minha oração. ${PERDAO_FIM}`,
     gratidao: 'Eu Te agradeço porque a vitória pertence a Ti e porque não estou sozinha nesta batalha.',
     pedido: ({ por, pedido }) =>
       `Intercedo${por}: ${pedido}. Peço que a Tua mão guarde, proteja e afaste tudo o que se levanta contra o Teu cuidado nesta situação. Não luto com as minhas armas, mas com oração, com a Palavra e com fé.`,
@@ -129,3 +129,17 @@ export function oracaoDoPortal(portal: PortalId, alvo: AlvoOracao): string {
 }
 
 export const PORTAIS_COM_ORACAO = Object.keys(MODELOS) as PortalId[];
+
+/**
+ * “Sabor” de cada portal, reaproveitado pelas orações de batalha espiritual (batalha.ts):
+ * a frase do momento, a confissão, a intenção do pedido e a entrega próprias do horário.
+ */
+export interface SaborPortal { momento: string; perdao: string; pedido: string; entrega: string }
+export const SABOR_PORTAL = Object.fromEntries(
+  (Object.entries(MODELOS) as [PortalId, Modelo][]).map(([id, m]) => [id, {
+    momento: m.entrada.replace(ENTRADA_BASE, '').trim(),
+    perdao: m.perdao,
+    pedido: m.pedido({ por: '', pedido: '§' }).split('§.')[1]?.trim() ?? '',
+    entrega: m.entrega,
+  }]),
+) as Record<PortalId, SaborPortal>;
